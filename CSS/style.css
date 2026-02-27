@@ -1034,3 +1034,22 @@ body {
     object-fit: cover !important;
     border: 5px solid blue !important;
 }
+
+/* ПРОСТЫЕ СТИЛИ ДЛЯ ФОТО */
+.review-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.review-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+}
