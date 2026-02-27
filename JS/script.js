@@ -52,17 +52,67 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== ФОРМА ОТЗЫВА (С ПОДКЛЮЧЕНИЕМ К SUPABASE) =====
+    // ===== ФУНКЦИЯ ЗАГРУЗКИ ОТЗЫВОВ =====
+    async function loadReviews() {
+        try {
+            const supabaseUrl = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
+            const supabaseKey = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+            const { data: reviews, error } = await supabase
+                .from('v_recent_reviews')
+                .select('*')
+                .limit(20);
+
+            if (error) throw error;
+
+            const reviewsList = document.querySelector('.reviews-list');
+            
+            if (reviews && reviews.length > 0) {
+                reviewsList.innerHTML = '';
+                
+                reviews.forEach(review => {
+                    const reviewCard = document.createElement('div');
+                    reviewCard.className = 'review-card';
+                    
+                    const reviewDate = review.review_date 
+                        ? new Date(review.review_date).toLocaleDateString('ru-RU')
+                        : 'Дата не указана';
+                    
+                    const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                    
+                    reviewCard.innerHTML = `
+                        <div class="review-header">
+                            <span class="review-author">${review.user_name}</span>
+                            <span class="review-date">${reviewDate}</span>
+                        </div>
+                        <div class="review-rating">
+                            ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
+                        </div>
+                        <p class="review-text">${review.review_text}</p>
+                        <div class="review-product">Товар: ${review.product_name}</div>
+                    `;
+                    
+                    reviewsList.appendChild(reviewCard);
+                });
+            } else {
+                reviewsList.innerHTML = '<p class="no-reviews">Пока нет отзывов. Будьте первым!</p>';
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке отзывов:', error);
+            document.querySelector('.reviews-list').innerHTML = '<p class="no-reviews">Не удалось загрузить отзывы</p>';
+        }
+    }
+
+    // ===== ФОРМА ОТЗЫВА =====
     const form = document.querySelector('.review-form');
     if(form) {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // ===== ПОДКЛЮЧЕНИЕ К SUPABASE =====
             const supabaseUrl = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
-            const supabaseKey = 'sb_publishable_oq8465obagmoA9k0pMmw_YPrq...'; // ← ВСТАВЬ СВОЙ ПОЛНЫЙ КЛЮЧ!
+            const supabaseKey = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-            // ===================================
 
             const name = document.querySelector('.form-input').value.trim();
             const text = document.querySelector('.form-textarea').value.trim();
@@ -79,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                // Отправляем отзыв в базу данных (для товара с ID = 1)
                 const { data, error } = await supabase
                     .rpc('add_review', {
                         p_product_id: 1,
@@ -90,37 +139,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) throw error;
 
-                // Добавляем отзыв на страницу (визуально)
-                const today = new Date();
-                const date = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
-                const starsHtml = '★'.repeat(activeStars) + '☆'.repeat(5 - activeStars);
-                
-                const reviewsList = document.querySelector('.reviews-list');
-                const newReview = document.createElement('div');
-                newReview.className = 'review-card';
-                newReview.innerHTML = `
-                    <div class="review-header">
-                        <span class="review-author">${name}</span>
-                        <span class="review-date">${date}</span>
-                    </div>
-                    <div class="review-rating">
-                        ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
-                    </div>
-                    <p class="review-text">${text}</p>
-                `;
-                reviewsList.prepend(newReview);
-
                 // Очищаем форму
                 document.querySelector('.form-input').value = '';
                 document.querySelector('.form-textarea').value = '';
                 agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
 
-                alert('Спасибо за ваш отзыв!');
+                alert('✅ Отзыв успешно добавлен! Спасибо!');
+                
+                // Перезагружаем отзывы
+                loadReviews();
 
             } catch (error) {
                 console.error('Ошибка при отправке отзыва:', error);
-                alert('Не удалось отправить отзыв. Попробуйте позже.');
+                alert('❌ Ошибка: не удалось отправить отзыв. Попробуйте позже.');
             }
         });
     }
@@ -138,4 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // ===== ЗАГРУЖАЕМ ОТЗЫВЫ ПРИ СТАРТЕ =====
+    loadReviews();
 });

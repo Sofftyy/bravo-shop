@@ -653,6 +653,24 @@ body {
     margin-top: 12px;
 }
 
+/* ===== НОВЫЕ СТИЛИ ДЛЯ ОТЗЫВОВ ===== */
+.review-product {
+    font-size: 14px;
+    color: var(--accent);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.no-reviews {
+    text-align: center;
+    font-size: 18px;
+    color: var(--gray);
+    padding: 40px 20px;
+    background: var(--white);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
 /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
 @media (max-width: 768px) {
     /* меню */
@@ -814,6 +832,11 @@ body {
     .review-text {
         font-size: 12px;
         font-weight: 300;
+    }
+
+    .review-product {
+        font-size: 11px;
+        margin-top: 8px;
     }
     
     .form-title {
