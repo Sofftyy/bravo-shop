@@ -52,14 +52,117 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== НАСТРОЙКИ SUPABASE (вынесли отдельно) =====
+    // ===== НАСТРОЙКИ SUPABASE =====
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
 
-    // ===== ФУНКЦИЯ ЗАГРУЗКИ ОТЗЫВОВ =====
+    // ===== ЗАГРУЗКА ФОТО =====
+    const photoUpload = document.getElementById('photoUpload');
+    const photoInput = document.getElementById('photoInput');
+    const photoPreviews = document.getElementById('photoPreviews');
+    const photoCount = document.getElementById('photoCount');
+    let selectedFiles = []; // Массив выбранных файлов
+    const MAX_PHOTOS = 3;
+
+    if (photoUpload && photoInput) {
+        // Клик по области загрузки
+        photoUpload.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('preview-remove')) {
+                photoInput.click();
+            }
+        });
+
+        // Выбор файлов
+        photoInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Проверяем количество
+            if (selectedFiles.length + files.length > MAX_PHOTOS) {
+                alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
+                return;
+            }
+
+            // Добавляем файлы
+            files.forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert(`Файл ${file.name} не является изображением`);
+                    return;
+                }
+                selectedFiles.push(file);
+                displayPreview(file);
+            });
+
+            updatePhotoCount();
+            photoInput.value = ''; // Очищаем для возможности повторного выбора
+        });
+    }
+
+    // Отображение превью
+    function displayPreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'preview-item';
+            previewDiv.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <span class="preview-remove" data-filename="${file.name}">×</span>
+            `;
+            
+            // Кнопка удаления
+            previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
+                const filename = this.dataset.filename;
+                selectedFiles = selectedFiles.filter(f => f.name !== filename);
+                this.closest('.preview-item').remove();
+                updatePhotoCount();
+            });
+            
+            photoPreviews.appendChild(previewDiv);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function updatePhotoCount() {
+        photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+    }
+
+    // ===== ФУНКЦИЯ ЗАГРУЗКИ ФАЙЛОВ В SUPABASE =====
+    async function uploadPhotos(files, reviewId) {
+        const uploadedUrls = [];
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `review-${reviewId}-${Date.now()}-${i}.${fileExt}`;
+            const filePath = `reviews/${fileName}`;
+
+            try {
+                const { data, error } = await supabase.storage
+                    .from('review-photos')
+                    .upload(filePath, file);
+
+                if (error) throw error;
+
+                // Получаем публичный URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('review-photos')
+                    .getPublicUrl(filePath);
+
+                uploadedUrls.push(publicUrl);
+            } catch (error) {
+                console.error('Ошибка загрузки фото:', error);
+            }
+        }
+        return uploadedUrls;
+    }
+
+    // ===== ЗАГРУЗКА ОТЗЫВОВ =====
     async function loadReviews() {
         try {
-            // СОЗДАЁМ КЛИЕНТ ПРЯМО ЗДЕСЬ
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             
             const { data: reviews, error } = await supabase
@@ -84,6 +187,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
                     
+                    // Добавляем фото, если есть
+                    let photosHtml = '';
+                    if (review.photos && review.photos.length > 0) {
+                        photosHtml = '<div class="review-photos">';
+                        review.photos.forEach(photoUrl => {
+                            photosHtml += `<img src="${photoUrl}" alt="Review photo" class="review-photo">`;
+                        });
+                        photosHtml += '</div>';
+                    }
+                    
                     reviewCard.innerHTML = `
                         <div class="review-header">
                             <span class="review-author">${review.user_name}</span>
@@ -94,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <p class="review-text">${review.review_text}</p>
                         <div class="review-product">Товар: ${review.product_name}</div>
+                        ${photosHtml}
                     `;
                     
                     reviewsList.appendChild(reviewCard);
@@ -103,7 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Ошибка при загрузке отзывов:', error);
-            document.querySelector('.reviews-list').innerHTML = '<p class="no-reviews">Не удалось загрузить отзывы</p>';
         }
     }
 
@@ -113,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // СОЗДАЁМ КЛИЕНТ ПРЯМО ЗДЕСЬ
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
             const name = document.querySelector('.form-input').value.trim();
@@ -131,21 +243,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const { data, error } = await supabase
+                // 1. Сначала создаём отзыв без фото, чтобы получить ID
+                const { data: reviewId, error: reviewError } = await supabase
                     .rpc('add_review', {
                         p_product_id: 1,
                         p_user_name: name,
                         p_rating: activeStars,
-                        p_review_text: text
+                        p_review_text: text,
+                        p_photos: [] // Пока пустой массив
                     });
 
-                if (error) throw error;
+                if (reviewError) throw reviewError;
+
+                // 2. Загружаем фото, если есть
+                let photoUrls = [];
+                if (selectedFiles.length > 0) {
+                    photoUrls = await uploadPhotos(selectedFiles, reviewId);
+                    
+                    // 3. Обновляем отзыв с ссылками на фото
+                    const { error: updateError } = await supabase
+                        .from('reviews')
+                        .update({ photos: photoUrls })
+                        .eq('id', reviewId);
+
+                    if (updateError) throw updateError;
+                }
 
                 // Очищаем форму
                 document.querySelector('.form-input').value = '';
                 document.querySelector('.form-textarea').value = '';
                 agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
+                
+                // Очищаем фото
+                selectedFiles = [];
+                photoPreviews.innerHTML = '';
+                updatePhotoCount();
 
                 alert('✅ Отзыв успешно добавлен! Спасибо!');
                 
