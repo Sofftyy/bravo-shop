@@ -726,7 +726,7 @@ body {
     margin-top: 12px;
 }
 
-/* ===== НОВЫЕ СТИЛИ ДЛЯ ОТЗЫВОВ ===== */
+/* Стили для товара в отзыве */
 .review-product {
     font-size: 14px;
     color: var(--accent);
@@ -734,6 +734,7 @@ body {
     font-style: italic;
 }
 
+/* Заглушка, если нет отзывов */
 .no-reviews {
     text-align: center;
     font-size: 18px;
