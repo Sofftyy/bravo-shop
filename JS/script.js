@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
     async function uploadPhotos(files, reviewId) {
         const uploadedUrls = [];
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -136,15 +137,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const filePath = `reviews/${fileName}`;
 
             try {
-                await supabase.storage
+                // Загружаем файл
+                const { error } = await supabase.storage
                     .from('review-photos')
                     .upload(filePath, file);
 
+                if (error) throw error;
+
+                // Получаем публичный URL
                 const { data: { publicUrl } } = supabase.storage
                     .from('review-photos')
                     .getPublicUrl(filePath);
 
                 uploadedUrls.push(publicUrl);
+                console.log('✅ Фото загружено:', publicUrl);
             } catch (error) {
                 console.error('Ошибка загрузки фото:', error);
             }
@@ -152,16 +158,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return uploadedUrls;
     }
 
-    // ===== УПРОЩЁННАЯ ЗАГРУЗКА ОТЗЫВОВ =====
+    // ===== ЗАГРУЗКА ОТЗЫВОВ =====
     async function loadReviews() {
         try {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             
+            // Загружаем отзывы
             const { data: reviews, error } = await supabase
                 .from('v_recent_reviews')
                 .select('*');
 
             if (error) throw error;
+
+            console.log('📥 Загруженные отзывы:', reviews);
 
             const reviewsList = document.querySelector('.reviews-list');
             reviewsList.innerHTML = '';
@@ -179,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Создаём звёзды
                     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
                     
-                    // Собираем HTML карточки
+                    // Начинаем собирать HTML карточки
                     let cardHtml = `
                         <div class="review-header">
                             <span class="review-author">${review.user_name}</span>
@@ -192,13 +201,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="review-product">Товар: ${review.product_name}</div>
                     `;
                     
-                    // ДОБАВЛЯЕМ ФОТО, ЕСЛИ ОНИ ЕСТЬ
+                    // Добавляем фото, если они есть
                     if (review.photos && review.photos.length > 0) {
+                        console.log('✅ Есть фото в отзыве:', review.photos);
                         cardHtml += '<div class="review-photos">';
-                        review.photos.forEach(photoUrl => {
-                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" style="max-width: 100px; max-height: 100px; margin: 5px; border: 2px solid #ccc; border-radius: 5px;">`;
+                        review.photos.forEach((photoUrl, index) => {
+                            cardHtml += `<img src="${photoUrl}" alt="Фото ${index + 1}" class="review-photo">`;
                         });
                         cardHtml += '</div>';
+                    } else {
+                        console.log('❌ Нет фото в отзыве');
                     }
                     
                     reviewCard.innerHTML = cardHtml;
@@ -235,7 +247,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                // 1. Создаём отзыв
+                console.log('📝 Отправка отзыва...');
+                console.log('Файлов для загрузки:', selectedFiles.length);
+
+                // 1. Сначала создаём отзыв без фото
                 const { data: reviewId, error: reviewError } = await supabase
                     .rpc('add_review', {
                         p_product_id: 1,
@@ -246,11 +261,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                 if (reviewError) throw reviewError;
+                console.log('✅ Отзыв создан, ID:', reviewId);
 
-                // 2. Загружаем фото
-                let photoUrls = [];
+                // 2. Если есть фото, загружаем их
                 if (selectedFiles.length > 0) {
-                    photoUrls = await uploadPhotos(selectedFiles, reviewId);
+                    console.log('📤 Загружаем фото...');
+                    const photoUrls = await uploadPhotos(selectedFiles, reviewId);
+                    console.log('✅ Фото загружены:', photoUrls);
                     
                     // 3. Обновляем отзыв с фото
                     const { error: updateError } = await supabase
@@ -259,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .eq('id', reviewId);
 
                     if (updateError) throw updateError;
+                    console.log('✅ Отзыв обновлён с фото');
                 }
 
                 // Очищаем форму
@@ -267,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
                 
+                // Очищаем фото
                 selectedFiles = [];
                 if (photoPreviews) photoPreviews.innerHTML = '';
                 updatePhotoCount();
@@ -274,10 +293,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('✅ Отзыв успешно добавлен!');
                 
                 // Перезагружаем отзывы
-                loadReviews();
+                await loadReviews();
 
             } catch (error) {
-                console.error('Ошибка:', error);
+                console.error('❌ Ошибка:', error);
                 alert('❌ Ошибка: ' + error.message);
             }
         });
