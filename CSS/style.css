@@ -474,7 +474,7 @@ body {
     color: var(--gray);
 }
 
-/* НОВЫЕ СТИЛИ ДЛЯ ПРЕВЬЮ ФОТО */
+/* Стили для превью перед отправкой */
 .photo-previews {
     display: flex;
     gap: 10px;
@@ -519,7 +519,7 @@ body {
     background: #9e4a30;
 }
 
-/* Стили для фото в отзывах */
+/* Стили для фото в отзывах (уже загруженных) */
 .review-photos {
     display: flex;
     gap: 10px;
@@ -533,6 +533,11 @@ body {
     border-radius: 8px;
     object-fit: cover;
     border: 2px solid var(--light-gray);
+    transition: transform 0.3s;
+}
+
+.review-photo:hover {
+    transform: scale(1.05);
 }
 
 .checkbox-wrapper {
@@ -915,6 +920,11 @@ body {
         width: 60px;
         height: 60px;
     }
+
+    .preview-item {
+        width: 60px;
+        height: 60px;
+    }
     
     .form-title {
         font-size: 16px;
@@ -937,11 +947,6 @@ body {
     
     .photo-note {
         font-size: 12px;
-    }
-
-    .preview-item {
-        width: 60px;
-        height: 60px;
     }
     
     .checkbox-wrapper label {
