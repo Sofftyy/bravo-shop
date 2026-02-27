@@ -1015,3 +1015,22 @@ body {
         font-size: 10px;
     }
 }
+
+/* ВРЕМЕННЫЕ СТИЛИ ДЛЯ ОТЛАДКИ ФОТО */
+.review-photos {
+    display: flex !important;
+    gap: 15px !important;
+    margin-top: 20px !important;
+    flex-wrap: wrap !important;
+    border: 5px solid red !important;
+    padding: 15px !important;
+    background-color: yellow !important;
+}
+
+.review-photo {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+    border: 5px solid blue !important;
+}
