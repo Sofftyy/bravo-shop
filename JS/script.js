@@ -52,13 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // ===== НАСТРОЙКИ SUPABASE (вынесли отдельно) =====
+    const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
+
     // ===== ФУНКЦИЯ ЗАГРУЗКИ ОТЗЫВОВ =====
     async function loadReviews() {
         try {
-            const supabaseUrl = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
-            const supabaseKey = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
+            // СОЗДАЁМ КЛИЕНТ ПРЯМО ЗДЕСЬ
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
             const { data: reviews, error } = await supabase
                 .from('v_recent_reviews')
                 .select('*')
@@ -110,9 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const supabaseUrl = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
-            const supabaseKey = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT'; 
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            // СОЗДАЁМ КЛИЕНТ ПРЯМО ЗДЕСЬ
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
             const name = document.querySelector('.form-input').value.trim();
             const text = document.querySelector('.form-textarea').value.trim();
@@ -152,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } catch (error) {
                 console.error('Ошибка при отправке отзыва:', error);
-                alert('❌ Ошибка: не удалось отправить отзыв. Попробуйте позже.');
+                alert('❌ Ошибка: ' + error.message);
             }
         });
     }
