@@ -137,14 +137,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const filePath = `reviews/${fileName}`;
 
             try {
-                // Загружаем файл
                 const { error } = await supabase.storage
                     .from('review-photos')
                     .upload(filePath, file);
 
                 if (error) throw error;
 
-                // Получаем публичный URL
                 const { data: { publicUrl } } = supabase.storage
                     .from('review-photos')
                     .getPublicUrl(filePath);
@@ -163,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             
-            // Загружаем отзывы
             const { data: reviews, error } = await supabase
                 .from('v_recent_reviews')
                 .select('*');
@@ -180,15 +177,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     const reviewCard = document.createElement('div');
                     reviewCard.className = 'review-card';
                     
-                    // Форматируем дату
                     const reviewDate = review.review_date 
                         ? new Date(review.review_date).toLocaleDateString('ru-RU')
                         : 'Дата не указана';
                     
-                    // Создаём звёзды
                     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
                     
-                    // Начинаем собирать HTML карточки
                     let cardHtml = `
                         <div class="review-header">
                             <span class="review-author">${review.user_name}</span>
@@ -206,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('✅ Есть фото в отзыве:', review.photos);
                         cardHtml += '<div class="review-photos">';
                         review.photos.forEach((photoUrl, index) => {
-                            cardHtml += `<img src="${photoUrl}" alt="Фото ${index + 1}" class="review-photo">`;
+                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" onload="console.log('Фото загружено')" onerror="console.log('Ошибка загрузки фото:', this.src)">`;
                         });
                         cardHtml += '</div>';
                     } else {
