@@ -204,9 +204,12 @@
                             <span class="star" data-rating="5">★</span>
                         </div>
                         
-                        <div class="photo-upload">
+                        <!-- ИСПРАВЛЕННЫЙ БЛОК С ФОТО -->
+                        <div class="photo-upload" id="photoUpload">
                             <span class="photo-label">Добавить фото</span>
-                            <span class="photo-note">до 3 изображений</span>
+                            <span class="photo-note" id="photoCount">0/3 изображений</span>
+                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
+                            <div class="photo-previews" id="photoPreviews"></div>
                         </div>
                         
                         <div class="checkbox-wrapper">

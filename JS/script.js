@@ -61,13 +61,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
     const photoCount = document.getElementById('photoCount');
-    let selectedFiles = []; // Массив выбранных файлов
+    let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
+    // Отладка: проверяем, найдены ли элементы
+    console.log('photoUpload:', photoUpload);
+    console.log('photoInput:', photoInput);
+    console.log('photoPreviews:', photoPreviews);
+    console.log('photoCount:', photoCount);
+
     if (photoUpload && photoInput) {
+        console.log('✅ Элементы найдены, инициализация загрузки фото');
+        
         // Клик по области загрузки
         photoUpload.addEventListener('click', function(e) {
+            console.log('🖱️ Клик по photoUpload');
             if (!e.target.classList.contains('preview-remove')) {
+                console.log('👉 Открываю диалог выбора файла');
                 photoInput.click();
             }
         });
@@ -75,14 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Выбор файлов
         photoInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
+            console.log('📁 Выбрано файлов:', files.length);
             
-            // Проверяем количество
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
                 return;
             }
 
-            // Добавляем файлы
             files.forEach(file => {
                 if (file.size > 5 * 1024 * 1024) {
                     alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
@@ -97,8 +106,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             updatePhotoCount();
-            photoInput.value = ''; // Очищаем для возможности повторного выбора
+            photoInput.value = '';
         });
+    } else {
+        console.error('❌ Элементы для загрузки фото не найдены!');
     }
 
     // Отображение превью
@@ -112,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="preview-remove" data-filename="${file.name}">×</span>
             `;
             
-            // Кнопка удаления
             previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
                 const filename = this.dataset.filename;
                 selectedFiles = selectedFiles.filter(f => f.name !== filename);
@@ -126,7 +136,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePhotoCount() {
-        photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+        if (photoCount) {
+            photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+        }
     }
 
     // ===== ФУНКЦИЯ ЗАГРУЗКИ ФАЙЛОВ В SUPABASE =====
@@ -147,12 +159,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) throw error;
 
-                // Получаем публичный URL
                 const { data: { publicUrl } } = supabase.storage
                     .from('review-photos')
                     .getPublicUrl(filePath);
 
                 uploadedUrls.push(publicUrl);
+                console.log('✅ Фото загружено:', publicUrl);
             } catch (error) {
                 console.error('Ошибка загрузки фото:', error);
             }
@@ -187,7 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
                     
-                    // Добавляем фото, если есть
                     let photosHtml = '';
                     if (review.photos && review.photos.length > 0) {
                         photosHtml = '<div class="review-photos">';
@@ -243,14 +254,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                // 1. Сначала создаём отзыв без фото, чтобы получить ID
+                // 1. Создаём отзыв без фото
                 const { data: reviewId, error: reviewError } = await supabase
                     .rpc('add_review', {
                         p_product_id: 1,
                         p_user_name: name,
                         p_rating: activeStars,
                         p_review_text: text,
-                        p_photos: [] // Пока пустой массив
+                        p_photos: []
                     });
 
                 if (reviewError) throw reviewError;
@@ -260,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (selectedFiles.length > 0) {
                     photoUrls = await uploadPhotos(selectedFiles, reviewId);
                     
-                    // 3. Обновляем отзыв с ссылками на фото
+                    // 3. Обновляем отзыв с фото
                     const { error: updateError } = await supabase
                         .from('reviews')
                         .update({ photos: photoUrls })
@@ -277,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Очищаем фото
                 selectedFiles = [];
-                photoPreviews.innerHTML = '';
+                if (photoPreviews) photoPreviews.innerHTML = '';
                 updatePhotoCount();
 
                 alert('✅ Отзыв успешно добавлен! Спасибо!');
