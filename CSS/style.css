@@ -519,25 +519,29 @@ body {
     background: #9e4a30;
 }
 
-/* Стили для фото в отзывах (уже загруженных) */
+/* КРАСИВЫЕ СТИЛИ ДЛЯ ФОТО В ОТЗЫВАХ (ФИНАЛЬНАЯ ВЕРСИЯ) */
 .review-photos {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin-top: 15px;
     flex-wrap: wrap;
 }
 
 .review-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
     object-fit: cover;
     border: 2px solid var(--light-gray);
-    transition: transform 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .review-photo:hover {
     transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    border-color: var(--accent);
 }
 
 .checkbox-wrapper {
@@ -913,13 +917,14 @@ body {
         margin-top: 8px;
     }
 
+    /* Адаптация фото для мобильных */
     .review-photos {
-        gap: 5px;
+        gap: 8px;
     }
 
     .review-photo {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
 
     .preview-item {
@@ -1014,113 +1019,4 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
-}
-
-/* ВРЕМЕННЫЕ СТИЛИ ДЛЯ ОТЛАДКИ ФОТО */
-.review-photos {
-    display: flex !important;
-    gap: 15px !important;
-    margin-top: 20px !important;
-    flex-wrap: wrap !important;
-    border: 5px solid red !important;
-    padding: 15px !important;
-    background-color: yellow !important;
-}
-
-.review-photo {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 8px !important;
-    object-fit: cover !important;
-    border: 5px solid blue !important;
-}
-
-/* ПРОСТЫЕ СТИЛИ ДЛЯ ФОТО */
-.review-photos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-}
-
-.review-photo {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 2px solid #ddd;
-}
-
-.review-photos {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.review-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 2px solid var(--light-gray);
-}
-
-.preview-item {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 2px solid var(--light-gray);
-}
-
-.preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.preview-remove {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    cursor: pointer;
-    border: 2px solid white;
-}
-
-.review-photos {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-}
-
-.review-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 2px solid #ddd;
-    transition: transform 0.2s;
-}
-
-.review-photo:hover {
-    transform: scale(1.05);
-    border-color: var(--accent);
 }
