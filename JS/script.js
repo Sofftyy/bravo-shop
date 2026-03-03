@@ -18,27 +18,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ТОВАРОВ =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ТОВАРОВ (для трёх товаров) =====
     const catalogGrid = document.getElementById('catalogGrid');
     const prevArrow = document.querySelector('.prev-arrow');
     const nextArrow = document.querySelector('.next-arrow');
-    
+    let currentIndex = 0;
+
     if (catalogGrid && prevArrow && nextArrow) {
         const products = Array.from(catalogGrid.children);
+        const totalProducts = products.length;
         
-        function swapProducts() {
-            const firstProduct = products[0];
-            const secondProduct = products[1];
+        function showProducts(index) {
+            // Скрываем все товары
+            products.forEach(product => {
+                product.style.display = 'none';
+            });
             
-            catalogGrid.innerHTML = '';
-            catalogGrid.appendChild(secondProduct);
-            catalogGrid.appendChild(firstProduct);
-            
-            products.reverse();
+            // Показываем два товара начиная с index
+            for (let i = 0; i < 2; i++) {
+                const productIndex = (index + i) % totalProducts;
+                products[productIndex].style.display = 'flex';
+            }
         }
         
-        prevArrow.addEventListener('click', swapProducts);
-        nextArrow.addEventListener('click', swapProducts);
+        prevArrow.addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + totalProducts) % totalProducts;
+            showProducts(currentIndex);
+        });
+        
+        nextArrow.addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % totalProducts;
+            showProducts(currentIndex);
+        });
+        
+        // Показываем первые два товара
+        showProducts(0);
     }
 
     // ===== РЕЙТИНГ =====
@@ -200,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('✅ Есть фото в отзыве:', review.photos);
                         cardHtml += '<div class="review-photos">';
                         review.photos.forEach((photoUrl, index) => {
-                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" onload="console.log('Фото загружено')" onerror="console.log('Ошибка загрузки фото:', this.src)">`;
+                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo">`;
                         });
                         cardHtml += '</div>';
                     } else {
@@ -295,6 +309,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ===== КНОПКИ "ПОДРОБНЕЕ" =====
+    document.querySelectorAll('.product-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productId = this.dataset.product;
+            const productCard = this.closest('.product-card');
+            const productName = productCard.querySelector('img').alt;
+            
+            // Проверяем, есть ли уже информация
+            const existingInfo = productCard.querySelector('.product-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            } else {
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'product-info';
+                infoDiv.innerHTML = `
+                    <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+                        <h4 style="color: var(--dark-blue); margin-bottom: 10px;">${productName}</h4>
+                        <p style="margin-bottom: 10px;">Здесь будет подробное описание товара, характеристики, размеры и т.д.</p>
+                        <p style="margin-bottom: 15px;">Цена: ${productId === '1' ? '2990' : productId === '2' ? '1990' : '2490'} ₽</p>
+                        <button class="close-info" style="padding: 8px 15px; background: var(--accent); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Закрыть</button>
+                    </div>
+                `;
+                productCard.appendChild(infoDiv);
+                
+                infoDiv.querySelector('.close-info').addEventListener('click', function() {
+                    infoDiv.remove();
+                });
+            }
+        });
+    });
 
     // ===== ПЛАВНАЯ ПРОКРУТКА =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

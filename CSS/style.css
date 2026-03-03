@@ -226,6 +226,8 @@ body {
     display: flex;
     gap: 40px;
     transition: transform 0.3s ease;
+    flex-wrap: nowrap;
+    justify-content: center;
 }
 
 .product-card {
@@ -519,7 +521,7 @@ body {
     background: #9e4a30;
 }
 
-/* КРАСИВЫЕ СТИЛИ ДЛЯ ФОТО В ОТЗЫВАХ (ФИНАЛЬНАЯ ВЕРСИЯ) */
+/* КРАСИВЫЕ СТИЛИ ДЛЯ ФОТО В ОТЗЫВАХ */
 .review-photos {
     display: flex;
     gap: 12px;
@@ -528,20 +530,60 @@ body {
 }
 
 .review-photo {
-    width: 200px;
-    height: 200px;
-    border-radius: 12px;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
     object-fit: cover;
     border: 2px solid var(--light-gray);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .review-photo:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     border-color: var(--accent);
+}
+
+/* Стили для информации о товаре */
+.product-info {
+    margin-top: 15px;
+    animation: fadeIn 0.3s ease;
+    width: 100%;
+}
+
+.product-info div {
+    background: var(--white);
+    border: 1px solid var(--light-gray);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.product-info h4 {
+    color: var(--dark-blue);
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.product-info button {
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.product-info button:hover {
+    background-color: #9e4a30 !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .checkbox-wrapper {
@@ -841,6 +883,10 @@ body {
         gap: 15px;
     }
     
+    .catalog-grid {
+        gap: 15px;
+    }
+    
     .product-card {
         width: 100px;
         gap: 8px;
@@ -923,13 +969,26 @@ body {
     }
 
     .review-photo {
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
     }
 
     .preview-item {
         width: 60px;
         height: 60px;
+    }
+
+    /* Информация о товаре на мобильных */
+    .product-info div {
+        padding: 12px !important;
+    }
+    
+    .product-info h4 {
+        font-size: 14px;
+    }
+    
+    .product-info p {
+        font-size: 12px;
     }
     
     .form-title {
