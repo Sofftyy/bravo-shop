@@ -556,23 +556,48 @@ body {
 .product-info div {
     background: var(--white);
     border: 1px solid var(--light-gray);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    transition: transform 0.3s ease;
 }
 
 .product-info h4 {
     color: var(--dark-blue);
-    margin-bottom: 10px;
-    font-size: 18px;
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+.product-info p {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.product-info ul {
+    margin-bottom: 15px;
+    padding-left: 20px;
+    color: #555;
+    list-style-type: none;
+}
+
+.product-info li {
+    margin-bottom: 8px;
+    font-size: 15px;
 }
 
 .product-info button {
     margin-top: 10px;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
 }
 
 .product-info button:hover {
     background-color: #9e4a30 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(179, 84, 55, 0.3);
 }
 
 @keyframes fadeIn {
@@ -980,15 +1005,24 @@ body {
 
     /* Информация о товаре на мобильных */
     .product-info div {
-        padding: 12px !important;
+        padding: 15px !important;
     }
     
     .product-info h4 {
-        font-size: 14px;
+        font-size: 16px;
     }
     
     .product-info p {
+        font-size: 13px;
+    }
+    
+    .product-info li {
         font-size: 12px;
+    }
+    
+    .product-info button {
+        padding: 8px 16px !important;
+        font-size: 12px !important;
     }
     
     .form-title {

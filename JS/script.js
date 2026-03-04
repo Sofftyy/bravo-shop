@@ -310,13 +310,55 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== КНОПКИ "ПОДРОБНЕЕ" =====
+    // ===== КНОПКИ "ПОДРОБНЕЕ" С ДЕТАЛЬНОЙ ИНФОРМАЦИЕЙ =====
     document.querySelectorAll('.product-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.dataset.product;
             const productCard = this.closest('.product-card');
             const productName = productCard.querySelector('img').alt;
+            
+            // Информация о товарах
+            const productInfo = {
+                '1': {
+                    title: 'Винтажный жакет',
+                    description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы. Идеально подойдет для создания романтичного образа или делового стиля с историей.',
+                    details: [
+                        '📍 Материал: 100% хлопок высокого качества',
+                        '📍 Размер: M (подойдет на 44-46)',
+                        '📍 Цвет: нежный бежевый',
+                        '📍 Особенности: винтажные пуговицы с перламутром, шелковая подкладка',
+                        '📍 Состояние: отличное, без дефектов'
+                    ],
+                    price: '2 990 ₽'
+                },
+                '2': {
+                    title: 'Винтажный пиджак',
+                    description: 'Классический пиджак в стиле oversize 90-х годов. Отличный вариант для создания стильного образа в стиле кэжуал или делового лука с винтажным акцентом.',
+                    details: [
+                        '📍 Материал: смесовая ткань (шерсть 70% / полиэстер 30%)',
+                        '📍 Размер: L (подойдет на 48-50)',
+                        '📍 Цвет: глубокий темно-синий',
+                        '📍 Особенности: нагрудный карман, шлица сзади, металлические пуговицы',
+                        '📍 Состояние:非常好的, небольшая потертость на рукаве (винтажный шарм)'
+                    ],
+                    price: '1 990 ₽'
+                },
+                '3': {
+                    title: 'Винтажные джинсы',
+                    description: 'Аутентичные джинсы прямого кроя 90-х годов. Настоящий винтажный деним с историей. Высокое качество и неповторимый стиль.',
+                    details: [
+                        '📍 Материал: 100% хлопок (плотный деним 14 унций)',
+                        '📍 Размер: 32/34 (подойдет на 48-50, рост 170-180)',
+                        '📍 Цвет: выбеленный светло-синий с эффектом потертости',
+                        '📍 Особенности: винтажные пуговицы, кожаный патч сзади, потертости',
+                        '📍 Состояние: хорошее, есть естественные потертости (винтаж)'
+                    ],
+                    price: '2 490 ₽'
+                }
+            };
+            
+            const info = productInfo[productId];
             
             // Проверяем, есть ли уже информация
             const existingInfo = productCard.querySelector('.product-info');
@@ -325,12 +367,22 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'product-info';
+                
+                // Создаём HTML с деталями
+                const detailsHtml = info.details.map(detail => `<li style="margin-bottom: 8px;">${detail}</li>`).join('');
+                
                 infoDiv.innerHTML = `
-                    <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-                        <h4 style="color: var(--dark-blue); margin-bottom: 10px;">${productName}</h4>
-                        <p style="margin-bottom: 10px;">Здесь будет подробное описание товара, характеристики, размеры и т.д.</p>
-                        <p style="margin-bottom: 15px;">Цена: ${productId === '1' ? '2990' : productId === '2' ? '1990' : '2490'} ₽</p>
-                        <button class="close-info" style="padding: 8px 15px; background: var(--accent); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Закрыть</button>
+                    <div style="margin-top: 15px; padding: 20px; background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%); border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
+                        <h4 style="color: var(--dark-blue); margin-bottom: 15px; font-size: 22px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; font-weight: 600;">${info.title}</h4>
+                        <p style="margin-bottom: 15px; font-size: 16px; line-height: 1.6; color: #444;">${info.description}</p>
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <h5 style="color: var(--dark-blue); margin-bottom: 10px; font-size: 16px;">Характеристики:</h5>
+                            <ul style="padding-left: 20px; color: #555; list-style-type: none;">
+                                ${detailsHtml}
+                            </ul>
+                        </div>
+                        <p style="font-size: 22px; font-weight: bold; color: var(--accent); margin-bottom: 15px; text-align: right;">${info.price}</p>
+                        <button class="close-info" style="padding: 12px 25px; background: var(--accent); color: white; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s; display: block; margin: 0 auto;">Закрыть</button>
                     </div>
                 `;
                 productCard.appendChild(infoDiv);
