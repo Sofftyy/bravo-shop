@@ -67,36 +67,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО (ИСПРАВЛЕНАЯ - ТЕПЕРЬ РАБОТАЕТ) =====
-    const photoUpload = document.getElementById('photoUpload');
+    // ===== ЗАГРУЗКА ФОТО (ПРОСТАЯ И РАБОЧАЯ) =====
+    const photoLabel = document.getElementById('photoLabel');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
     const photoCount = document.getElementById('photoCount');
     let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
-    console.log('🔍 photoUpload:', photoUpload);
+    console.log('🔍 photoLabel:', photoLabel);
     console.log('🔍 photoInput:', photoInput);
 
-    if (photoUpload && photoInput) {
+    if (photoLabel && photoInput) {
         console.log('✅ Элементы найдены');
         
-        // Убираем все старые обработчики с photoUpload
-        const newPhotoUpload = photoUpload.cloneNode(true);
-        photoUpload.parentNode.replaceChild(newPhotoUpload, photoUpload);
+        // Клик по тексту "Добавить фото" открывает диалог
+        photoLabel.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🖱️ Клик по Добавить фото');
+            photoInput.click();
+        });
         
-        // Получаем обновлённую ссылку
-        const finalPhotoUpload = document.getElementById('photoUpload');
-        const finalPhotoInput = document.getElementById('photoInput');
-        
-        // Убираем обработчики с input и добавляем новый
-        finalPhotoInput.onchange = function(e) {
+        // Обработчик выбора файлов
+        photoInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
             console.log('📁 Выбрано файлов:', files.length);
             
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
-                finalPhotoInput.value = '';
+                photoInput.value = '';
                 return;
             }
             
@@ -120,29 +119,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         <img src="${ev.target.result}" alt="Preview">
                         <span class="preview-remove" data-filename="${file.name}">×</span>
                     `;
-                    previewDiv.querySelector('.preview-remove').onclick = function() {
+                    previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
                         selectedFiles = selectedFiles.filter(f => f.name !== file.name);
                         previewDiv.remove();
                         updatePhotoCount();
-                    };
+                    });
                     if (photoPreviews) photoPreviews.appendChild(previewDiv);
                 };
                 reader.readAsDataURL(file);
             });
             
             updatePhotoCount();
-            finalPhotoInput.value = '';
-        };
+            photoInput.value = '';
+        });
         
         function updatePhotoCount() {
             if (photoCount) {
                 photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
             }
         }
-        
-        // Простой обработчик клика - input сам обрабатывает клик
-        finalPhotoInput.style.cursor = 'pointer';
-        
     } else {
         console.error('❌ Элементы для фото не найдены!');
     }
