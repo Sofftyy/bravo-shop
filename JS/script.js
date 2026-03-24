@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== КАТАЛОГ =====
+    // ===== КАТАЛОГ (переключение товаров) =====
     const catalogGrid = document.getElementById('catalogGrid');
     const prevArrow = document.querySelector('.prev-arrow');
     const nextArrow = document.querySelector('.next-arrow');
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ===== ЗАГРУЗКА ФОТО =====
+    // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
     async function uploadPhotos(files, reviewId) {
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const urls = [];
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => loadReviews(), 100);
     }
 
-    // ===== ФОРМА =====
+    // ===== ФОРМА ОТЗЫВА =====
     const form = document.querySelector('.review-form');
     if (form) {
         form.onsubmit = async (e) => {
@@ -167,28 +167,85 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ===== ПОДРОБНЕЕ (ИСПРАВЛЕНО) =====
+    // ===== КНОПКИ "ПОДРОБНЕЕ" (ИСПРАВЛЕНО) =====
     const infoMap = {
-        1: { title: 'Винтажный жакет', desc: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый', '📍 Состояние: отличное'], price: '2 990 ₽' },
-        2: { title: 'Винтажный пиджак', desc: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий', '📍 Состояние: хорошее'], price: '1 990 ₽' },
-        3: { title: 'Винтажные джинсы', desc: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий', '📍 Состояние: хорошее'], price: '2 490 ₽' }
+        1: { 
+            title: 'Винтажный жакет', 
+            desc: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.', 
+            details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый', '📍 Состояние: отличное'], 
+            price: '2 990 ₽' 
+        },
+        2: { 
+            title: 'Винтажный пиджак', 
+            desc: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.', 
+            details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий', '📍 Состояние: хорошее'], 
+            price: '1 990 ₽' 
+        },
+        3: { 
+            title: 'Винтажные джинсы', 
+            desc: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.', 
+            details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий', '📍 Состояние: хорошее'], 
+            price: '2 490 ₽' 
+        }
     };
     
-    document.querySelectorAll('.product-link').forEach(link => {
-        link.onclick = (e) => {
+    // Находим все кнопки "Подробнее" и добавляем обработчик
+    const productLinks = document.querySelectorAll('.product-link');
+    console.log('Найдено кнопок "Подробнее":', productLinks.length);
+    
+    productLinks.forEach(link => {
+        // Создаём новый обработчик
+        const clickHandler = function(e) {
             e.preventDefault();
-            const id = link.dataset.product;
-            const card = link.closest('.product-card');
-            const existing = card.querySelector('.product-info');
-            if (existing) { existing.remove(); return; }
-            const info = infoMap[id];
-            if (!info) return;
-            const div = document.createElement('div');
-            div.className = 'product-info';
-            div.innerHTML = `<div><h4>${info.title}</h4><p>${info.desc}</p><ul>${info.details.map(d => `<li>${d}</li>`).join('')}</ul><p class="price">${info.price}</p><button class="close-info">Закрыть</button></div>`;
-            card.appendChild(div);
-            div.querySelector('.close-info').onclick = () => div.remove();
+            e.stopPropagation();
+            
+            const productId = this.getAttribute('data-product');
+            console.log('Клик по кнопке Подробнее, товар:', productId);
+            
+            const productCard = this.closest('.product-card');
+            if (!productCard) {
+                console.error('Не найдена карточка товара');
+                return;
+            }
+            
+            const info = infoMap[productId];
+            if (!info) {
+                console.error('Нет информации для товара', productId);
+                return;
+            }
+            
+            // Проверяем, есть ли уже открытая информация
+            const existingInfo = productCard.querySelector('.product-info');
+            if (existingInfo) {
+                existingInfo.remove();
+                return;
+            }
+            
+            // Создаём блок с информацией
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'product-info';
+            const detailsHtml = info.details.map(d => `<li>${d}</li>`).join('');
+            infoDiv.innerHTML = `
+                <div>
+                    <h4>${info.title}</h4>
+                    <p>${info.desc}</p>
+                    <ul>${detailsHtml}</ul>
+                    <p class="price">${info.price}</p>
+                    <button class="close-info">Закрыть</button>
+                </div>
+            `;
+            
+            productCard.appendChild(infoDiv);
+            
+            // Закрытие по кнопке
+            const closeBtn = infoDiv.querySelector('.close-info');
+            if (closeBtn) {
+                closeBtn.onclick = () => infoDiv.remove();
+            }
         };
+        
+        // Добавляем обработчик
+        link.addEventListener('click', clickHandler);
     });
 
     // ===== ПЛАВНАЯ ПРОКРУТКА (ИСПРАВЛЕНО) =====
@@ -196,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
         a.onclick = (e) => {
             e.preventDefault();
             const href = a.getAttribute('href');
-            // Проверяем, что href не пустой и не просто "#"
             if (href && href !== '#' && href.length > 1) {
                 const target = document.querySelector(href);
                 if (target) {
