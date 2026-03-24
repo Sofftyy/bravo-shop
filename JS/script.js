@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО (ИСПРАВЛЕНО) =====
+    // ===== ЗАГРУЗКА ФОТО (РАБОТАЕТ НА ТЕЛЕФОНЕ) =====
     const photoUpload = document.getElementById('photoUpload');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -75,25 +75,39 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
+    // Проверяем наличие элементов
     console.log('🔍 Поиск элементов для фото:');
     console.log('photoUpload:', photoUpload);
     console.log('photoInput:', photoInput);
-    console.log('photoPreviews:', photoPreviews);
-    console.log('photoCount:', photoCount);
 
     if (photoUpload && photoInput) {
         console.log('✅ Элементы найдены, добавляем обработчики');
         
-        photoUpload.addEventListener('click', function(e) {
+        // Убираем все существующие обработчики и добавляем новый
+        const newPhotoUpload = photoUpload.cloneNode(true);
+        photoUpload.parentNode.replaceChild(newPhotoUpload, photoUpload);
+        
+        const newPhotoInput = photoInput.cloneNode(true);
+        photoInput.parentNode.replaceChild(newPhotoInput, photoInput);
+        
+        // Получаем обновлённые ссылки
+        const finalPhotoUpload = document.getElementById('photoUpload');
+        const finalPhotoInput = document.getElementById('photoInput');
+        
+        // Обработчик клика на область загрузки
+        finalPhotoUpload.addEventListener('click', function(e) {
             console.log('🖱️ Клик по photoUpload');
+            // Проверяем, не кликнули ли на кнопку удаления
             if (!e.target.classList.contains('preview-remove')) {
                 e.preventDefault();
+                e.stopPropagation();
                 console.log('👉 Открываем диалог выбора файла');
-                photoInput.click();
+                finalPhotoInput.click();
             }
         });
 
-        photoInput.addEventListener('change', function(e) {
+        // Обработчик выбора файлов
+        finalPhotoInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
             console.log('📁 Выбрано файлов:', files.length);
             
@@ -103,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             files.forEach(file => {
+                console.log('Файл:', file.name, 'размер:', (file.size / 1024).toFixed(2), 'KB');
+                
                 if (file.size > 5 * 1024 * 1024) {
                     alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
                     return;
@@ -116,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             updatePhotoCount();
-            photoInput.value = '';
+            finalPhotoInput.value = '';
         });
         
         function displayPreview(file) {
