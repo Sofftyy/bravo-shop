@@ -18,59 +18,63 @@
     <!-- Preload LCP изображения (главное фото) -->
     <link rel="preload" as="image" href="images/shop-photo.webp" fetchpriority="high">
     
-    <!-- Критический CSS для полной стабилизации макета (CLS fix) -->
     <style>
-        /* Базовые сбросы и переменные */
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
-        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5;font-display:swap}
-        .container{max-width:1200px;margin:0 auto;padding:0 20px}
-        
-        /* Шапка */
-        .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000;min-height:82px}
-        .navbar .container{display:flex;justify-content:space-between;align-items:center}
-        .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
-        .logo-icon{width:35px;height:35px;object-fit:contain}
-        
-        /* LCP изображение с фиксированным aspect-ratio */
-        .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden;min-height:266px}
-        .full-width-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-        
-        /* Заголовки секций */
-        .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px;min-height:106px}
-        .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
-        .white-title{color:var(--white)}
-        .section-header .section-title{margin-bottom:0}
-        
-        /* Резервирование места для динамического контента (CLS fix) */
-        main{display:block;contain:layout style;position:relative}
-        .section-with-header{contain:layout;padding:0 0 60px 0;position:relative}
-        .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
-        .reviews-list{min-height:200px;contain:layout}
-        .advantages-content{min-height:400px}
-        .catalog-slider{min-height:460px;position:relative}
-        
-        /* Фикс для текстовых элементов */
-        h1,h2,h3,h4,p,a,span,li,button{font-family:inherit}
-        
-        /* Предотвращаем смещение контента */
-        .about-text, .production-text, .advantage-text, .review-text {
-            transform: translateZ(0);
-        }
-        
-        /* Мобильная адаптация критических элементов */
-        @media (max-width:768px){
-            .navbar{min-height:70px}
-            .section-header{min-height:80px}
-            .full-width-image{min-height:200px}
-            .section-title{font-size:16px;text-align:center}
-            .logo{gap:16px;font-size:24px}
-            .logo-icon{width:30px;height:30px}
-            .catalog-grid{min-height:280px;gap:10px}
-            .reviews-list{min-height:300px}
-            .catalog-slider{min-height:280px}
-        }
-    </style>
+    /* Базовые сбросы и переменные */
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
+    
+    /* Используем системный шрифт до загрузки Inter */
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    
+    /* Шапка */
+    .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000;min-height:82px}
+    .navbar .container{display:flex;justify-content:space-between;align-items:center}
+    .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
+    .logo-icon{width:35px;height:35px;object-fit:contain}
+    
+    /* LCP изображение */
+    .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden;min-height:266px}
+    .full-width-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+    
+    /* Заголовки секций */
+    .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px;min-height:106px}
+    .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
+    .white-title{color:var(--white)}
+    .section-header .section-title{margin-bottom:0}
+    
+    /* Резервирование места */
+    main{display:block;contain:layout style;position:relative;min-height:100vh}
+    .section-with-header{contain:layout;padding:0 0 60px 0;position:relative}
+    .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
+    .reviews-list{min-height:200px;contain:layout}
+    .advantages-content{min-height:400px}
+    .catalog-slider{min-height:460px;position:relative}
+    
+    /* Фиксы для текста */
+    .about-text,.production-text,.advantage-text,.review-text{font-size:32px;line-height:1.5;max-width:1200px;margin-bottom:30px;font-weight:400}
+    .production-text{font-size:32px;margin-bottom:15px}
+    .love-text{font-size:32px;font-weight:400;display:inline-block}
+    .about-content,.production-content{min-height:120px}
+    
+    /* Все изображения с явными размерами */
+    img{max-width:100%;height:auto}
+    
+    /* Мобильная адаптация */
+    @media (max-width:768px){
+        .navbar{min-height:70px}
+        .section-header{min-height:80px}
+        .full-width-image{min-height:200px}
+        .section-title{font-size:16px;text-align:center}
+        .logo{gap:16px;font-size:24px}
+        .logo-icon{width:30px;height:30px}
+        .catalog-grid{min-height:280px;gap:10px}
+        .reviews-list{min-height:300px}
+        .catalog-slider{min-height:280px}
+        .about-text,.production-text,.love-text{font-size:12px;line-height:1.4}
+        .about-content,.production-content{min-height:80px}
+    }
+</style>
     
     <!-- Основной CSS загружается асинхронно -->
     <link rel="stylesheet" href="CSS/style.css" media="print" onload="this.media='all'">
@@ -355,5 +359,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="JS/script.js" defer></script>
+    <script>
+    // Применяем Inter после загрузки
+    if ('fonts' in document) {
+        document.fonts.ready.then(function() {
+            document.body.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+            document.body.classList.add('inter-loaded');
+        });
+    }
+</script>
 </body>
 </html>
