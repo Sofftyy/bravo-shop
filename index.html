@@ -43,8 +43,8 @@
         .section-header .section-title{margin-bottom:0}
         
         /* Резервирование места для динамического контента (CLS fix) */
-        main{display:block;contain:layout style}
-        .section-with-header{contain:layout;padding:0 0 60px 0}
+        main{display:block;contain:layout style;position:relative}
+        .section-with-header{contain:layout;padding:0 0 60px 0;position:relative}
         .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
         .reviews-list{min-height:200px;contain:layout}
         .advantages-content{min-height:400px}
@@ -52,6 +52,11 @@
         
         /* Фикс для текстовых элементов */
         h1,h2,h3,h4,p,a,span,li,button{font-family:inherit}
+        
+        /* Предотвращаем смещение контента */
+        .about-text, .production-text, .advantage-text, .review-text {
+            transform: translateZ(0);
+        }
         
         /* Мобильная адаптация критических элементов */
         @media (max-width:768px){
