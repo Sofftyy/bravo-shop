@@ -1,17 +1,14 @@
-// Ждем полной загрузки DOM
+// Оптимизированная версия с lazy loading и асинхронной загрузкой
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Сайт загружен, инициализация...');
-    
-    // Инициализация всех компонентов
-    initBurgerMenu();
-    initProductSlider();
-    loadReviewsFromStorage();
-    initRatingStars();
-    initReviewForm();
-    initSmoothScroll();
-    initPhotoUpload();
-    
-    console.log('Все компоненты инициализированы');
+    // Откладываем выполнение не критичных функций
+    setTimeout(() => {
+        initBurgerMenu();
+        initProductSlider();
+        loadReviewsFromStorage();
+        initRatingStars();
+        initReviewForm();
+        initSmoothScroll();
+    }, 0);
 });
 
 function initBurgerMenu() {
@@ -60,33 +57,25 @@ function initProductSlider() {
 
 function initRatingStars() {
     const stars = document.querySelectorAll('.rating-input .star');
-    console.log('Найдено звезд:', stars.length);
-    
     stars.forEach((star, index) => {
         star.addEventListener('click', function() {
             stars.forEach(s => s.classList.remove('active'));
             for(let i = 0; i <= index; i++) {
                 stars[i].classList.add('active');
             }
-            console.log('Выбрана оценка:', index + 1);
         });
     });
 }
 
 function initReviewForm() {
     const form = document.querySelector('.review-form');
-    if(!form) {
-        console.log('Форма не найдена');
-        return;
-    }
-    
-    console.log('Форма найдена, добавляем обработчик');
+    if(!form) return;
     
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const name = document.getElementById('reviewName')?.value.trim();
-        const text = document.getElementById('reviewText')?.value.trim();
+        const name = document.querySelector('.form-input')?.value.trim();
+        const text = document.querySelector('.form-textarea')?.value.trim();
         const agreement = document.getElementById('agreement');
         const activeStars = document.querySelectorAll('.rating-input .star.active').length;
         
@@ -108,8 +97,8 @@ function initReviewForm() {
         saveReviewToStorage(name, activeStars, text);
         addReviewToPage(name, activeStars, text);
         
-        document.getElementById('reviewName').value = '';
-        document.getElementById('reviewText').value = '';
+        document.querySelector('.form-input').value = '';
+        document.querySelector('.form-textarea').value = '';
         agreement.checked = false;
         document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
         
@@ -118,11 +107,8 @@ function initReviewForm() {
 }
 
 function loadReviewsFromStorage() {
-    const reviewsList = document.getElementById('reviewsList');
-    if (!reviewsList) {
-        console.log('Список отзывов не найден');
-        return;
-    }
+    const reviewsList = document.querySelector('.reviews-list');
+    if (!reviewsList) return;
     
     let reviews = JSON.parse(localStorage.getItem('bravo_reviews')) || [];
     
@@ -153,8 +139,6 @@ function loadReviewsFromStorage() {
         `;
         reviewsList.appendChild(reviewCard);
     });
-    
-    console.log('Загружено отзывов:', reviews.length);
 }
 
 function saveReviewToStorage(name, rating, text) {
@@ -164,10 +148,10 @@ function saveReviewToStorage(name, rating, text) {
     
     reviews.unshift({ name: escapeHtml(name), rating, text: escapeHtml(text), date });
     
+    // Ограничиваем количество отзывов до 50 для производительности
     if (reviews.length > 50) reviews = reviews.slice(0, 50);
     
     localStorage.setItem('bravo_reviews', JSON.stringify(reviews));
-    console.log('Отзыв сохранен');
 }
 
 function addReviewToPage(name, rating, text) {
@@ -175,7 +159,7 @@ function addReviewToPage(name, rating, text) {
     const date = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
     const starsHtml = '★'.repeat(rating) + '☆'.repeat(5 - rating);
     
-    const reviewsList = document.getElementById('reviewsList');
+    const reviewsList = document.querySelector('.reviews-list');
     const newReview = document.createElement('div');
     newReview.className = 'review-card';
     newReview.innerHTML = `
@@ -201,30 +185,6 @@ function initSmoothScroll() {
             }
         });
     });
-}
-
-function initPhotoUpload() {
-    const photoUploadBtn = document.getElementById('photoUploadBtn');
-    const photoInput = document.getElementById('photoInput');
-    
-    if (photoUploadBtn && photoInput) {
-        photoUploadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            photoInput.click();
-        });
-        
-        photoInput.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (files.length > 0) {
-                if (files.length > 3) {
-                    alert('Можно загрузить не более 3 фото');
-                    photoInput.value = '';
-                    return;
-                }
-                alert(`Выбрано ${files.length} фото для загрузки`);
-            }
-        });
-    }
 }
 
 function escapeHtml(str) {

@@ -7,23 +7,32 @@
     <meta name="description" content="Магазин винтажной одежды Bravo. Уютная и комфортная одежда для миллениалов.">
     <meta name="keywords" content="винтаж, одежда, магазин, Bravo">
     
+    <!-- Preconnect для быстрой загрузки шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Подключаем шрифт Inter с оптимизацией -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Подключаем CSS -->
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
+    <!-- ШАПКА САЙТА -->
     <nav class="navbar">
         <div class="container">
             <a href="#" class="logo">
                 <img src="images/bravo-icon.webp" alt="Bravo" class="logo-icon" width="35" height="35">
                 Bravo
             </a>
+            
+            <!-- Бургер-меню для мобильных -->
             <div class="burger-menu" id="burgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
+            
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#about">О компании</a></li>
                 <li><a href="#production">Наше производство</a></li>
@@ -36,10 +45,18 @@
     </nav>
 
     <main>
+        <!-- ФОТО ПОД ШАПКОЙ - ОПТИМИЗИРОВАНО -->
         <div class="full-width-image">
-            <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="600" loading="eager" fetchpriority="high">
+            <img src="images/shop-photo.webp" 
+                 alt="Магазин Bravo" 
+                 class="full-width-img" 
+                 width="1200" 
+                 height="600"
+                 loading="eager"
+                 fetchpriority="high">
         </div>
 
+        <!-- О КОМПАНИИ -->
         <section id="about" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -53,6 +70,7 @@
             </div>
         </section>
 
+        <!-- НАШЕ ПРОИЗВОДСТВО -->
         <section id="production" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -63,14 +81,22 @@
                 <div class="production-content">
                     <p class="production-text">Наши изделия изготовлены из недорогих но качественных материалов и доступны в наших розничных магазинах, производим с заботой и доступностью для наших покупателей.<br><span class="love-text">с любовью Bravo.</span></p>
                 </div>
+                <!-- Три фото под текстом -->
                 <div class="production-gallery">
-                    <div class="production-image"><img src="images/proiz1.webp" alt="Производство 1" width="400" height="300" loading="lazy"></div>
-                    <div class="production-image"><img src="images/proiz2.webp" alt="Производство 2" width="400" height="300" loading="lazy"></div>
-                    <div class="production-image"><img src="images/proiz3.webp" alt="Производство 3" width="400" height="300" loading="lazy"></div>
+                    <div class="production-image">
+                        <img src="images/proiz1.webp" alt="Производство 1" width="400" height="300" loading="lazy">
+                    </div>
+                    <div class="production-image">
+                        <img src="images/proiz2.webp" alt="Производство 2" width="400" height="300" loading="lazy">
+                    </div>
+                    <div class="production-image">
+                        <img src="images/proiz3.webp" alt="Производство 3" width="400" height="300" loading="lazy">
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- КАТАЛОГ -->
         <section id="catalog" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -79,20 +105,27 @@
             </div>
             <div class="container">
                 <h3 class="subsection-title">Новая коллекция</h3>
+                
                 <div class="catalog-slider">
                     <button class="slider-arrow prev-arrow" aria-label="Предыдущий товар">
                         <img src="images/arrow-left.webp" alt="Предыдущий" class="arrow-icon" width="50" height="50">
                     </button>
+                    
                     <div class="catalog-grid" id="catalogGrid">
                         <div class="product-card">
-                            <div class="product-image"><img src="images/product1.webp" alt="Винтажная куртка" width="358" height="399" loading="lazy"></div>
+                            <div class="product-image">
+                                <img src="images/product1.webp" alt="Винтажная куртка" width="358" height="399" loading="lazy">
+                            </div>
                             <a href="#" class="product-link">Подробнее</a>
                         </div>
                         <div class="product-card">
-                            <div class="product-image"><img src="images/product2.webp" alt="Винтажное платье" width="358" height="399" loading="lazy"></div>
+                            <div class="product-image">
+                                <img src="images/product2.webp" alt="Винтажное платье" width="358" height="399" loading="lazy">
+                            </div>
                             <a href="#" class="product-link">Подробнее</a>
                         </div>
                     </div>
+                    
                     <button class="slider-arrow next-arrow" aria-label="Следующий товар">
                         <img src="images/arrow-right.webp" alt="Следующий" class="arrow-icon" width="50" height="50">
                     </button>
@@ -100,6 +133,7 @@
             </div>
         </section>
 
+        <!-- НАШИ ПРЕИМУЩЕСТВА -->
         <section id="advantages" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -109,28 +143,39 @@
             <div class="container">
                 <div class="advantages-content">
                     <div class="advantage-block">
-                        <div class="advantage-image"><img src="images/preim1.webp" alt="Доступные цены" width="100" height="100" loading="lazy"></div>
+                        <div class="advantage-image">
+                            <img src="images/preim1.webp" alt="Доступные цены" width="100" height="100" loading="lazy">
+                        </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Доступные цены:</h3>
                             <p class="advantage-text">Качественный винтаж по цене масс-маркета.<br>Мы работаем напрямую с поставщиками и производителями,<br>чтобы вы могли позволить себе стиль с историей без переплат.</p>
                         </div>
                     </div>
+                    
                     <div class="advantage-block">
-                        <div class="advantage-image"><img src="images/preim2.webp" alt="Качество" width="100" height="100" loading="lazy"></div>
+                        <div class="advantage-image">
+                            <img src="images/preim2.webp" alt="Качество" width="100" height="100" loading="lazy">
+                        </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Качество:</h3>
                             <p class="advantage-text">Наши вещи созданы из практичных и качественных материалов,<br>которые будут служить вам долговечно.<br>Мы проверяем каждую деталь, чтобы вы получили лучшее за свои деньги!</p>
                         </div>
                     </div>
+                    
                     <div class="advantage-block">
-                        <div class="advantage-image"><img src="images/preim3.webp" alt="Уютная атмосфера" width="100" height="100" loading="lazy"></div>
+                        <div class="advantage-image">
+                            <img src="images/preim3.webp" alt="Уютная атмосфера" width="100" height="100" loading="lazy">
+                        </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Уютная атмосфера:</h3>
                             <p class="advantage-text">Наши магазины — это место, где хочется остаться.<br>Приходите не только за одеждой, но и за настроением!</p>
                         </div>
                     </div>
+                    
                     <div class="advantage-block">
-                        <div class="advantage-image"><img src="images/preim4.webp" alt="Уникальный стиль" width="100" height="100" loading="lazy"></div>
+                        <div class="advantage-image">
+                            <img src="images/preim4.webp" alt="Уникальный стиль" width="100" height="100" loading="lazy">
+                        </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Уникальный стиль:</h3>
                             <p class="advantage-text">Наши вещи с характером и историей.<br>Каждая модель в нашей коллекции помогает создать образ,<br>который расскажет о вас больше, чем слова.</p>
@@ -140,6 +185,7 @@
             </div>
         </section>
 
+        <!-- ОТЗЫВЫ -->
         <section id="reviews" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -147,12 +193,17 @@
                 </div>
             </div>
             <div class="container">
-                <div class="reviews-list" id="reviewsList"></div>
+                <div class="reviews-list" id="reviewsList">
+                    <!-- Отзывы будут загружаться из localStorage -->
+                </div>
+                
                 <div class="review-form-container">
                     <h3 class="form-title">Написать отзыв</h3>
+                    
                     <form id="feedbackForm" class="review-form">
                         <input type="text" class="form-input" id="reviewName" placeholder="Ваше имя..." required>
                         <textarea class="form-textarea" id="reviewText" placeholder="Введите текст..." required></textarea>
+                        
                         <div class="rating-input" id="ratingInput">
                             <span class="star" data-rating="1">★</span>
                             <span class="star" data-rating="2">★</span>
@@ -160,21 +211,24 @@
                             <span class="star" data-rating="4">★</span>
                             <span class="star" data-rating="5">★</span>
                         </div>
-                        <div class="photo-upload" id="photoUploadBtn">
+                        
+                        <div class="photo-upload">
                             <span class="photo-label">Добавить фото</span>
                             <span class="photo-note">до 3 изображений</span>
-                            <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
                         </div>
+                        
                         <div class="checkbox-wrapper">
                             <input type="checkbox" id="agreement" required>
                             <label for="agreement">Согласен на обработку персональных данных</label>
                         </div>
+                        
                         <button type="submit" class="btn-submit">Отправить</button>
                     </form>
                 </div>
             </div>
         </section>
 
+        <!-- НАШИ КОНТАКТЫ -->
         <section id="contacts" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -187,14 +241,17 @@
                         <p class="contact-label">Приезжайте к нам в магазин по адресу:</p>
                         <p class="contact-value">улица Маршала Чуйкова, 31, Волгоград, 400066</p>
                     </div>
+                    
                     <div class="contact-item">
                         <p class="contact-label">Звонки принимаем с 9:00 до 21:00</p>
                         <p class="contact-value">8 (800) 335 35 35, 28-48-39</p>
                     </div>
+                    
                     <div class="contact-item">
                         <p class="contact-label">Задайте ваш вопрос на почту</p>
                         <p class="contact-value">bravolg@softy.ru</p>
                     </div>
+                    
                     <div class="contact-item">
                         <p class="contact-label">Присоединяйся к нашей команде Bravo!</p>
                         <p class="contact-value">rabota@bravo.team</p>
@@ -204,6 +261,7 @@
         </section>
     </main>
 
+    <!-- ПОДВАЛ -->
     <footer class="footer">
         <div class="container">
             <div class="footer-top">
@@ -216,15 +274,21 @@
                         <li><a href="#reviews">Отзывы</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-social-block">
                     <h3 class="footer-social-title">Мы в соц. сетях</h3>
                     <p class="footer-social-text">Подписывайся на наши социальные сети.<br>Получай информацию о скидках и акциях.</p>
                     <div class="footer-social-icons">
-                        <a href="#" class="footer-social-link" aria-label="Вконтакте"><img src="images/vk.webp" alt="Вконтакте" class="footer-social-icon" width="50" height="50" loading="lazy"></a>
-                        <a href="#" class="footer-social-link" aria-label="Telegram"><img src="images/tg.webp" alt="Telegram" class="footer-social-icon" width="50" height="50" loading="lazy"></a>
+                        <a href="#" class="footer-social-link" aria-label="Вконтакте">
+                            <img src="images/vk.webp" alt="Вконтакте" class="footer-social-icon" width="50" height="50" loading="lazy">
+                        </a>
+                        <a href="#" class="footer-social-link" aria-label="Telegram">
+                            <img src="images/tg.webp" alt="Telegram" class="footer-social-icon" width="50" height="50" loading="lazy">
+                        </a>
                     </div>
                 </div>
             </div>
+            
             <div class="footer-bottom">
                 <p class="footer-address">40066, г. Волгоград, улица Маршала Чуйкова, 31.</p>
                 <p class="footer-phone">8 (800) 335 35 35, 28-48-39</p>
@@ -233,6 +297,7 @@
         </div>
     </footer>
 
-    <script src="JS/script.js"></script>
+    <!-- Подключаем JavaScript с defer для оптимизации -->
+    <script src="JS/script.js" defer></script>
 </body>
 </html>
