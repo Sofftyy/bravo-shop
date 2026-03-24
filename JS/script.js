@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО =====
+    // ===== ЗАГРУЗКА ФОТО (ИСПРАВЛЕНО) =====
     const photoUpload = document.getElementById('photoUpload');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -75,16 +75,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
+    console.log('🔍 Поиск элементов для фото:');
+    console.log('photoUpload:', photoUpload);
+    console.log('photoInput:', photoInput);
+    console.log('photoPreviews:', photoPreviews);
+    console.log('photoCount:', photoCount);
+
     if (photoUpload && photoInput) {
+        console.log('✅ Элементы найдены, добавляем обработчики');
+        
         photoUpload.addEventListener('click', function(e) {
+            console.log('🖱️ Клик по photoUpload');
             if (!e.target.classList.contains('preview-remove')) {
                 e.preventDefault();
+                console.log('👉 Открываем диалог выбора файла');
                 photoInput.click();
             }
         });
 
         photoInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
+            console.log('📁 Выбрано файлов:', files.length);
             
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
@@ -107,34 +118,41 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePhotoCount();
             photoInput.value = '';
         });
-    }
-
-    function displayPreview(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const previewDiv = document.createElement('div');
-            previewDiv.className = 'preview-item';
-            previewDiv.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <span class="preview-remove" data-filename="${file.name}">×</span>
-            `;
-            
-            previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
-                const filename = this.dataset.filename;
-                selectedFiles = selectedFiles.filter(f => f.name !== filename);
-                this.closest('.preview-item').remove();
-                updatePhotoCount();
-            });
-            
-            photoPreviews.appendChild(previewDiv);
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function updatePhotoCount() {
-        if (photoCount) {
-            photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+        
+        function displayPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'preview-item';
+                previewDiv.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <span class="preview-remove" data-filename="${file.name}">×</span>
+                `;
+                
+                previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
+                    const filename = this.dataset.filename;
+                    selectedFiles = selectedFiles.filter(f => f.name !== filename);
+                    this.closest('.preview-item').remove();
+                    updatePhotoCount();
+                    console.log('🗑️ Удалено фото:', filename);
+                });
+                
+                if (photoPreviews) {
+                    photoPreviews.appendChild(previewDiv);
+                }
+            };
+            reader.readAsDataURL(file);
         }
+        
+        function updatePhotoCount() {
+            if (photoCount) {
+                photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+            }
+        }
+    } else {
+        console.error('❌ Элементы для загрузки фото НЕ найдены!');
+        console.error('photoUpload:', photoUpload);
+        console.error('photoInput:', photoInput);
     }
 
     // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
