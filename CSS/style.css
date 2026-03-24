@@ -1176,4 +1176,57 @@ body {
     margin: 0;
 }
 
+.inter-loaded body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Стабилизация всех текстовых элементов */
+.about-text,
+.production-text,
+.advantage-text,
+.review-text,
+.section-title,
+.subsection-title,
+.advantage-title,
+.review-author,
+.form-title,
+.contact-label,
+.contact-value,
+.footer-menu a,
+.footer-social-title,
+.footer-social-text {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Фикс для изображений в производстве */
+.production-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 300 / 200;
+}
+
+/* Фикс для изображений преимуществ */
+.advantage-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 100 / 100;
+}
+
+/* Фикс для навигации */
+.nav-menu {
+    contain: layout;
+}
+
+/* Стабилизация карточек */
+.product-card,
+.review-card {
+    transform: translateZ(0);
+}
+
+/* Предотвращаем смещение от шрифтов */
+body {
+    font-display: optional;
+}
+
 }

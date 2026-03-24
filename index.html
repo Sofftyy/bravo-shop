@@ -3,370 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bravo - магазин винтажной одежды. Качественный винтаж по доступным ценам. Жакеты, пиджаки, джинсы с историей.">
-    <meta name="keywords" content="винтаж, одежда, магазин, винтажный жакет, винтажный пиджак, винтажные джинсы">
-    <meta name="author" content="Шиленков Данила Владимирович">
-    <title>Bravo - магазин винтажной одежды</title>
-    
-    <!-- Preconnect для ускорения загрузки -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://wrvovgkrrguvcvzeoyne.supabase.co">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    
-    <!-- Preload LCP изображения (главное фото) -->
-    <link rel="preload" as="image" href="images/shop-photo.webp" fetchpriority="high">
-    
+    <title>Каталог товаров</title>
     <style>
-    /* Базовые сбросы и переменные */
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
-    
-    /* Используем системный шрифт до загрузки Inter */
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5}
-    .container{max-width:1200px;margin:0 auto;padding:0 20px}
-    
-    /* Шапка */
-    .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000;min-height:82px}
-    .navbar .container{display:flex;justify-content:space-between;align-items:center}
-    .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
-    .logo-icon{width:35px;height:35px;object-fit:contain}
-    
-    /* LCP изображение */
-    .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden;min-height:266px}
-    .full-width-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-    
-    /* Заголовки секций */
-    .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px;min-height:106px}
-    .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
-    .white-title{color:var(--white)}
-    .section-header .section-title{margin-bottom:0}
-    
-    /* Резервирование места */
-    main{display:block;contain:layout style;position:relative;min-height:100vh}
-    .section-with-header{contain:layout;padding:0 0 60px 0;position:relative}
-    .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
-    .reviews-list{min-height:200px;contain:layout}
-    .advantages-content{min-height:400px}
-    .catalog-slider{min-height:460px;position:relative}
-    
-    /* Фиксы для текста */
-    .about-text,.production-text,.advantage-text,.review-text{font-size:32px;line-height:1.5;max-width:1200px;margin-bottom:30px;font-weight:400}
-    .production-text{font-size:32px;margin-bottom:15px}
-    .love-text{font-size:32px;font-weight:400;display:inline-block}
-    .about-content,.production-content{min-height:120px}
-    
-    /* Все изображения с явными размерами */
-    img{max-width:100%;height:auto}
-    
-    /* Мобильная адаптация */
-    @media (max-width:768px){
-        .navbar{min-height:70px}
-        .section-header{min-height:80px}
-        .full-width-image{min-height:200px}
-        .section-title{font-size:16px;text-align:center}
-        .logo{gap:16px;font-size:24px}
-        .logo-icon{width:30px;height:30px}
-        .catalog-grid{min-height:280px;gap:10px}
-        .reviews-list{min-height:300px}
-        .catalog-slider{min-height:280px}
-        .about-text,.production-text,.love-text{font-size:12px;line-height:1.4}
-        .about-content,.production-content{min-height:80px}
-    }
-</style>
-    
-    <!-- Основной CSS загружается асинхронно -->
-    <link rel="stylesheet" href="CSS/style.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="CSS/style.css"></noscript>
-    
-    <!-- Шрифт Inter с асинхронной загрузкой -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Сетка каталога */
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        /* Карточка товара */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #e0e0e0;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e44d3a;
+            margin: 10px 0;
+        }
+
+        .card-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* Кнопка подробнее */
+        .detail-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .detail-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .detail-btn.active {
+            background-color: #28a745;
+        }
+
+        /* Детальное описание (скрыто по умолчанию) */
+        .detail-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .detail-content.show {
+            display: block;
+        }
+
+        .detail-content h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .detail-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .detail-content li {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Контейнер для уведомлений */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .notification {
+            background: white;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f44336;
+            color: #f44336;
+        }
+
+        .notification.success {
+            border-left: 4px solid #4caf50;
+            color: #4caf50;
+        }
+
+        .notification.info {
+            border-left: 4px solid #2196f3;
+            color: #2196f3;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .catalog {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- ШАПКА САЙТА -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">
-                <img src="images/bravo-icon.webp" alt="Bravo" class="logo-icon" width="35" height="35">
-                Bravo
-            </a>
-            
-            <button class="burger-menu" id="burgerMenu" aria-label="Меню">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#about">О компании</a></li>
-                <li><a href="#production">Наше производство</a></li>
-                <li><a href="#catalog">Каталог</a></li>
-                <li><a href="#advantages">Наши преимущества</a></li>
-                <li><a href="#contacts">Контакты</a></li>
-                <li><a href="#reviews">Отзывы</a></li>
-            </ul>
+    <div class="container">
+        <h1>📦 Наш каталог</h1>
+        
+        <div class="catalog" id="catalog">
+            <!-- Товары будут загружены из JavaScript -->
         </div>
-    </nav>
+    </div>
 
-    <main>
-        <!-- LCP ИЗОБРАЖЕНИЕ (preload) -->
-        <div class="full-width-image">
-            <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" fetchpriority="high">
-        </div>
-
-        <!-- О КОМПАНИИ -->
-        <section id="about" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">О компании</h2>
-                </div>
-            </div>
-            <div class="container">
-                <div class="about-content">
-                    <p class="about-text">Мы являемся модной компанией, которая продает винтажную одежду.<br>Наша цель сделать пребывание в нашем магазине комфортным и уютным.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- НАШЕ ПРОИЗВОДСТВО -->
-        <section id="production" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">Наше производство</h2>
-                </div>
-            </div>
-            <div class="container">
-                <div class="production-content">
-                    <p class="production-text">Наши изделия изготовлены из недорогих но качественных материалов и доступны в наших розничных магазинах, производим с заботой и доступностью для наших покупателей.<br><span class="love-text">с любовью Bravo.</span></p>
-                </div>
-                <div class="production-gallery">
-                    <div class="production-image">
-                        <img src="images/proiz1.webp" alt="Производство Bravo" width="300" height="200" loading="lazy">
-                    </div>
-                    <div class="production-image">
-                        <img src="images/proiz2.webp" alt="Производство Bravo 2" width="300" height="200" loading="lazy">
-                    </div>
-                    <div class="production-image">
-                        <img src="images/proiz3.webp" alt="Производство Bravo 3" width="300" height="200" loading="lazy">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- КАТАЛОГ -->
-        <section id="catalog" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">Каталог</h2>
-                </div>
-            </div>
-            <div class="container">
-                <h3 class="subsection-title">Новая коллекция</h3>
-                
-                <div class="catalog-slider">
-                    <button class="slider-arrow prev-arrow" aria-label="Предыдущие товары">
-                        <img src="images/arrow-left.webp" alt="" class="arrow-icon" width="30" height="30">
-                    </button>
-                    
-                    <div class="catalog-grid" id="catalogGrid">
-                        <div class="product-card" data-product-id="1">
-                            <div class="product-image">
-                                <img src="images/product1.webp" alt="Винтажный жакет" width="358" height="399" loading="lazy">
-                            </div>
-                            <a href="#" class="product-link" data-product="1">Подробнее</a>
-                        </div>
-                        <div class="product-card" data-product-id="2">
-                            <div class="product-image">
-                                <img src="images/product2.webp" alt="Винтажный пиджак" width="358" height="399" loading="lazy">
-                            </div>
-                            <a href="#" class="product-link" data-product="2">Подробнее</a>
-                        </div>
-                        <div class="product-card" data-product-id="3">
-                            <div class="product-image">
-                                <img src="images/product3.webp" alt="Винтажные джинсы" width="358" height="399" loading="lazy">
-                            </div>
-                            <a href="#" class="product-link" data-product="3">Подробнее</a>
-                        </div>
-                    </div>
-                    
-                    <button class="slider-arrow next-arrow" aria-label="Следующие товары">
-                        <img src="images/arrow-right.webp" alt="" class="arrow-icon" width="30" height="30">
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- НАШИ ПРЕИМУЩЕСТВА -->
-        <section id="advantages" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">Наши преимущества</h2>
-                </div>
-            </div>
-            <div class="container">
-                <div class="advantages-content">
-                    <div class="advantage-block">
-                        <div class="advantage-image">
-                            <img src="images/preim1.webp" alt="Доступные цены" width="100" height="100" loading="lazy">
-                        </div>
-                        <div class="advantage-text-block">
-                            <h3 class="advantage-title">Доступные цены:</h3>
-                            <p class="advantage-text">Качественный винтаж по цене масс-маркета.<br>Мы работаем напрямую с поставщиками и производителями,<br>чтобы вы могли позволить себе стиль с историей без переплат.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="advantage-block">
-                        <div class="advantage-image">
-                            <img src="images/preim2.webp" alt="Качество" width="100" height="100" loading="lazy">
-                        </div>
-                        <div class="advantage-text-block">
-                            <h3 class="advantage-title">Качество:</h3>
-                            <p class="advantage-text">Наши вещи созданы из практичных и качественных материалов,<br>которые будут служить вам долговечно.<br>Мы проверяем каждую деталь, чтобы вы получили лучшее за свои деньги!</p>
-                        </div>
-                    </div>
-                    
-                    <div class="advantage-block">
-                        <div class="advantage-image">
-                            <img src="images/preim3.webp" alt="Уютная атмосфера" width="100" height="100" loading="lazy">
-                        </div>
-                        <div class="advantage-text-block">
-                            <h3 class="advantage-title">Уютная атмосфера:</h3>
-                            <p class="advantage-text">Наши магазины — это место, где хочется остаться.<br>Приходите не только за одеждой, но и за настроением!</p>
-                        </div>
-                    </div>
-                    
-                    <div class="advantage-block">
-                        <div class="advantage-image">
-                            <img src="images/preim4.webp" alt="Уникальный стиль" width="100" height="100" loading="lazy">
-                        </div>
-                        <div class="advantage-text-block">
-                            <h3 class="advantage-title">Уникальный стиль:</h3>
-                            <p class="advantage-text">Наши вещи с характером и историей.<br>Каждая модель в нашей коллекции помогает создать образ,<br>который расскажет о вас больше, чем слова.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ОТЗЫВЫ -->
-        <section id="reviews" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">Отзывы</h2>
-                </div>
-            </div>
-            <div class="container">
-                <div class="reviews-list" id="reviewsList"></div>
-                
-                <div class="review-form-container">
-                    <h3 class="form-title">Написать отзыв</h3>
-                    
-                    <form id="feedbackForm" class="review-form">
-                        <input type="text" class="form-input" id="reviewName" placeholder="Ваше имя..." required>
-                        <textarea class="form-textarea" id="reviewText" placeholder="Введите текст..." required></textarea>
-                        
-                        <div class="rating-input" id="ratingInput">
-                            <span class="star" data-rating="1">★</span>
-                            <span class="star" data-rating="2">★</span>
-                            <span class="star" data-rating="3">★</span>
-                            <span class="star" data-rating="4">★</span>
-                            <span class="star" data-rating="5">★</span>
-                        </div>
-                        
-                        <div class="photo-upload" id="photoUpload">
-                            <span class="photo-label" id="photoLabel">Добавить фото</span>
-                            <span class="photo-note" id="photoCount">0/3 изображений</span>
-                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
-                            <div class="photo-previews" id="photoPreviews"></div>
-                        </div>
-                        
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" id="agreement" required>
-                            <label for="agreement">Согласен на обработку персональных данных</label>
-                        </div>
-                        
-                        <button type="submit" class="btn-submit">Отправить</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- НАШИ КОНТАКТЫ -->
-        <section id="contacts" class="section-with-header">
-            <div class="section-header">
-                <div class="container">
-                    <h2 class="section-title white-title">Наши контакты</h2>
-                </div>
-            </div>
-            <div class="container">
-                <div class="contacts-info">
-                    <div class="contact-item">
-                        <p class="contact-label">Приезжайте к нам в магазин по адресу:</p>
-                        <p class="contact-value">улица Маршала Чуйкова, 31, Волгоград, 400066</p>
-                    </div>
-                    <div class="contact-item">
-                        <p class="contact-label">Звонки принимаем с 9:00 до 21:00</p>
-                        <p class="contact-value">8 (800) 335 35 35, 28-48-39</p>
-                    </div>
-                    <div class="contact-item">
-                        <p class="contact-label">Задайте ваш вопрос на почту</p>
-                        <p class="contact-value">bravolg@softy.ru</p>
-                    </div>
-                    <div class="contact-item">
-                        <p class="contact-label">Присоединяйся к нашей команде Bravo!</p>
-                        <p class="contact-value">rabota@bravo.team</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- ПОДВАЛ -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-menu-block">
-                    <ul class="footer-menu">
-                        <li><a href="#about">О компании</a></li>
-                        <li><a href="#production">Наше производство</a></li>
-                        <li><a href="#advantages">Наши преимущества</a></li>
-                        <li><a href="#contacts">Контакты</a></li>
-                        <li><a href="#reviews">Отзывы</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social-block">
-                    <h3 class="footer-social-title">Мы в соц. сетях</h3>
-                    <p class="footer-social-text">Подписывайся на наши социальные сети.<br>Получай информацию о скидках и акциях.</p>
-                    <div class="footer-social-icons">
-                        <a href="https://vk.com/ilovekanekiken" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <img src="images/vk.webp" alt="Вконтакте" class="footer-social-icon" width="50" height="50" loading="lazy">
-                        </a>
-                        <a href="https://t.me/midexsf" target="_blank" rel="noopener noreferrer" class="footer-social-link">
-                            <img src="images/tg.webp" alt="Telegram" class="footer-social-icon" width="50" height="50" loading="lazy">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p class="footer-address">40066, г. Волгоград, улица Маршала Чуйкова, 31.</p>
-                <p class="footer-phone">8 (800) 335 35 35, 28-48-39</p>
-                <p class="footer-copyright">© 2026, Шиленков Данила Владимирович.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="JS/script.js" defer></script>
-    <script>
-    // Применяем Inter после загрузки
-    if ('fonts' in document) {
-        document.fonts.ready.then(function() {
-            document.body.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-            document.body.classList.add('inter-loaded');
-        });
-    }
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
