@@ -1,15 +1,19 @@
-// Оптимизированная версия с lazy loading и асинхронной загрузкой
 document.addEventListener('DOMContentLoaded', function() {
-    // Откладываем выполнение не критичных функций
-    setTimeout(() => {
-        initBurgerMenu();
-        initProductSlider();
-        loadReviewsFromStorage();
-        initRatingStars();
-        initReviewForm();
-        initSmoothScroll();
-    }, 0);
+    console.log('Сайт загружен, инициализация...');
+    
+    initBurgerMenu();
+    initProductSlider();
+    loadReviewsFromStorage();
+    initRatingStars();
+    initReviewForm();
+    initSmoothScroll();
+    initPhotoUpload();
+    
+    console.log('Все компоненты инициализированы');
 });
+
+// Переменная для хранения выбранных фото
+let selectedPhotos = [];
 
 function initBurgerMenu() {
     const burgerMenu = document.getElementById('burgerMenu');
@@ -74,8 +78,8 @@ function initReviewForm() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const name = document.querySelector('.form-input')?.value.trim();
-        const text = document.querySelector('.form-textarea')?.value.trim();
+        const name = document.getElementById('reviewName')?.value.trim();
+        const text = document.getElementById('reviewText')?.value.trim();
         const agreement = document.getElementById('agreement');
         const activeStars = document.querySelectorAll('.rating-input .star.active').length;
         
@@ -97,17 +101,19 @@ function initReviewForm() {
         saveReviewToStorage(name, activeStars, text);
         addReviewToPage(name, activeStars, text);
         
-        document.querySelector('.form-input').value = '';
-        document.querySelector('.form-textarea').value = '';
+        document.getElementById('reviewName').value = '';
+        document.getElementById('reviewText').value = '';
         agreement.checked = false;
         document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
+        selectedPhotos = [];
+        updatePhotoUploadDisplay();
         
         alert('Спасибо за ваш отзыв!');
     });
 }
 
 function loadReviewsFromStorage() {
-    const reviewsList = document.querySelector('.reviews-list');
+    const reviewsList = document.getElementById('reviewsList');
     if (!reviewsList) return;
     
     let reviews = JSON.parse(localStorage.getItem('bravo_reviews')) || [];
@@ -148,7 +154,6 @@ function saveReviewToStorage(name, rating, text) {
     
     reviews.unshift({ name: escapeHtml(name), rating, text: escapeHtml(text), date });
     
-    // Ограничиваем количество отзывов до 50 для производительности
     if (reviews.length > 50) reviews = reviews.slice(0, 50);
     
     localStorage.setItem('bravo_reviews', JSON.stringify(reviews));
@@ -159,7 +164,7 @@ function addReviewToPage(name, rating, text) {
     const date = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
     const starsHtml = '★'.repeat(rating) + '☆'.repeat(5 - rating);
     
-    const reviewsList = document.querySelector('.reviews-list');
+    const reviewsList = document.getElementById('reviewsList');
     const newReview = document.createElement('div');
     newReview.className = 'review-card';
     newReview.innerHTML = `
@@ -185,6 +190,50 @@ function initSmoothScroll() {
             }
         });
     });
+}
+
+function initPhotoUpload() {
+    const photoUploadBtn = document.getElementById('photoUploadBtn');
+    const photoInput = document.getElementById('photoInput');
+    
+    if (photoUploadBtn && photoInput) {
+        photoUploadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const newFiles = files.slice(0, 3 - selectedPhotos.length);
+            
+            if (newFiles.length < files.length) {
+                alert('Можно загрузить не более 3 фото');
+            }
+            
+            selectedPhotos = [...selectedPhotos, ...newFiles];
+            updatePhotoUploadDisplay();
+            
+            photoInput.value = '';
+        });
+    }
+}
+
+function updatePhotoUploadDisplay() {
+    const photoUploadBtn = document.getElementById('photoUploadBtn');
+    if (!photoUploadBtn) return;
+    
+    const photoLabel = photoUploadBtn.querySelector('.photo-label');
+    const photoNote = photoUploadBtn.querySelector('.photo-note');
+    
+    if (selectedPhotos.length > 0) {
+        photoLabel.textContent = `Выбрано ${selectedPhotos.length} фото`;
+        photoNote.textContent = selectedPhotos.map(f => f.name.substring(0, 20)).join(', ');
+        photoUploadBtn.style.backgroundColor = '#e8f0fe';
+    } else {
+        photoLabel.textContent = 'Добавить фото';
+        photoNote.textContent = 'до 3 изображений';
+        photoUploadBtn.style.backgroundColor = '';
+    }
 }
 
 function escapeHtml(str) {
