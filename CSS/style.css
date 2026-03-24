@@ -1304,4 +1304,69 @@ img {
         height: 40px;
     }
 }
+
+/* ===== ФИКСАЦИЯ CLS ДЛЯ ДИНАМИЧЕСКОГО КОНТЕНТА ===== */
+
+/* Резервируем место под каталог до загрузки */
+.catalog-grid {
+    min-height: 460px;
+    position: relative;
+}
+
+/* Резервируем место под отзывы до загрузки */
+.reviews-list {
+    min-height: 200px;
+    position: relative;
+}
+
+/* Резервируем место под преимущества */
+.advantages-content {
+    min-height: 400px;
+}
+
+/* Для мобильных */
+@media (max-width: 768px) {
+    .catalog-grid {
+        min-height: 280px;
+    }
+    
+    .reviews-list {
+        min-height: 300px;
+    }
+}
+
+/* Стабилизация карточек товаров */
+.product-card {
+    width: 358px;
+    flex-shrink: 0;
+}
+
+/* Фикс для скрытых товаров при переключении */
+.product-card[style*="display: none"] {
+    display: none !important;
+}
+
+/* Предотвращаем скачки при загрузке отзывов */
+.review-card {
+    margin-bottom: 20px;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+/* Убираем возможные скачки от анимаций */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-info {
+    animation: fadeIn 0.2s ease;
+}
+
 }
