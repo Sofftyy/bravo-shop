@@ -913,8 +913,9 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
+}
 
-    /* Фото загрузка */
+/* Фото загрузка - для всех устройств */
 #photoUploadBtn {
     cursor: pointer;
 }
@@ -925,6 +926,4 @@ body {
 
 .photo-upload:hover {
     background-color: var(--light-gray);
-}
-
 }
