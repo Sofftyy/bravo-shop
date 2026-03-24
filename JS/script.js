@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО (ИСПРАВЛЕНАЯ - РАБОТАЕТ) =====
+    // ===== ЗАГРУЗКА ФОТО (ИСПРАВЛЕНАЯ - ТЕПЕРЬ РАБОТАЕТ) =====
     const photoUpload = document.getElementById('photoUpload');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -81,34 +81,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (photoUpload && photoInput) {
         console.log('✅ Элементы найдены');
         
-        // Убираем все старые обработчики
+        // Убираем все старые обработчики с photoUpload
         const newPhotoUpload = photoUpload.cloneNode(true);
         photoUpload.parentNode.replaceChild(newPhotoUpload, photoUpload);
         
-        const newPhotoInput = photoInput.cloneNode(true);
-        photoInput.parentNode.replaceChild(newPhotoInput, photoInput);
-        
-        // Получаем обновлённые ссылки
+        // Получаем обновлённую ссылку
         const finalPhotoUpload = document.getElementById('photoUpload');
         const finalPhotoInput = document.getElementById('photoInput');
         
-        // Обработчик клика
-        finalPhotoUpload.addEventListener('click', function(e) {
-            console.log('🖱️ Клик по photoUpload');
-            if (!e.target.classList.contains('preview-remove')) {
-                e.preventDefault();
-                console.log('👉 Открываем диалог выбора файла');
-                finalPhotoInput.click();
-            }
-        });
-        
-        // Обработчик выбора файлов
-        finalPhotoInput.addEventListener('change', function(e) {
+        // Убираем обработчики с input и добавляем новый
+        finalPhotoInput.onchange = function(e) {
             const files = Array.from(e.target.files);
             console.log('📁 Выбрано файлов:', files.length);
             
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
+                finalPhotoInput.value = '';
                 return;
             }
             
@@ -122,37 +110,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 selectedFiles.push(file);
-                displayPreview(file);
+                
+                // Превью
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'preview-item';
+                    previewDiv.innerHTML = `
+                        <img src="${ev.target.result}" alt="Preview">
+                        <span class="preview-remove" data-filename="${file.name}">×</span>
+                    `;
+                    previewDiv.querySelector('.preview-remove').onclick = function() {
+                        selectedFiles = selectedFiles.filter(f => f.name !== file.name);
+                        previewDiv.remove();
+                        updatePhotoCount();
+                    };
+                    if (photoPreviews) photoPreviews.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
             });
             
             updatePhotoCount();
             finalPhotoInput.value = '';
-        });
-        
-        function displayPreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewDiv = document.createElement('div');
-                previewDiv.className = 'preview-item';
-                previewDiv.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <span class="preview-remove" data-filename="${file.name}">×</span>
-                `;
-                previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
-                    selectedFiles = selectedFiles.filter(f => f.name !== file.name);
-                    previewDiv.remove();
-                    updatePhotoCount();
-                });
-                if (photoPreviews) photoPreviews.appendChild(previewDiv);
-            };
-            reader.readAsDataURL(file);
-        }
+        };
         
         function updatePhotoCount() {
             if (photoCount) {
                 photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
             }
         }
+        
+        // Простой обработчик клика - input сам обрабатывает клик
+        finalPhotoInput.style.cursor = 'pointer';
+        
     } else {
         console.error('❌ Элементы для фото не найдены!');
     }
