@@ -1116,4 +1116,43 @@ body {
     }
 }
 
+/* Изолируем main, чтобы предотвратить смещение */
+main {
+    contain: layout style;
+    transform: translateZ(0);
+}
+
+/* Фиксируем высоту всех динамических контейнеров */
+.section-with-header {
+    contain: layout;
+}
+
+.reviews-list {
+    contain: layout;
+    position: relative;
+}
+
+/* Предотвращаем смещение при загрузке отзывов */
+.review-card {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Фикс для шрифтов */
+body {
+    font-display: swap;
+}
+
+/* Резервируем место под стрелки */
+.catalog-slider {
+    min-height: 460px;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .catalog-slider {
+        min-height: 280px;
+    }
+}
+
 }

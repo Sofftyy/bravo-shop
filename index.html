@@ -12,55 +12,58 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://wrvovgkrrguvcvzeoyne.supabase.co">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     
     <!-- Preload LCP изображения (главное фото) -->
     <link rel="preload" as="image" href="images/shop-photo.webp" fetchpriority="high">
+    
+    <!-- Критический CSS для полной стабилизации макета (CLS fix) -->
     <style>
         /* Базовые сбросы и переменные */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
-        body{font-family:'Inter',sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5}
+        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5;font-display:swap}
         .container{max-width:1200px;margin:0 auto;padding:0 20px}
         
         /* Шапка */
-        .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000}
+        .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000;min-height:82px}
         .navbar .container{display:flex;justify-content:space-between;align-items:center}
         .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
         .logo-icon{width:35px;height:35px;object-fit:contain}
         
         /* LCP изображение с фиксированным aspect-ratio */
-        .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden}
+        .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden;min-height:266px}
         .full-width-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
         
         /* Заголовки секций */
-        .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px}
+        .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px;min-height:106px}
         .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
         .white-title{color:var(--white)}
         .section-header .section-title{margin-bottom:0}
         
-        /* Резервирование места для динамического контента */
+        /* Резервирование места для динамического контента (CLS fix) */
+        main{display:block;contain:layout style}
+        .section-with-header{contain:layout;padding:0 0 60px 0}
         .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
-        .reviews-list{min-height:200px}
+        .reviews-list{min-height:200px;contain:layout}
         .advantages-content{min-height:400px}
+        .catalog-slider{min-height:460px;position:relative}
         
-        /* Задаём fallback шрифт, чтобы предотвратить смещение */
-        body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        font-display: swap;
-        }
-    
-        /* Резервируем место под текст до загрузки шрифта */
-        h1, h2, h3, h4, p, a, span, li, button {
-        font-family: inherit;
-        }
+        /* Фикс для текстовых элементов */
+        h1,h2,h3,h4,p,a,span,li,button{font-family:inherit}
         
         /* Мобильная адаптация критических элементов */
         @media (max-width:768px){
+            .navbar{min-height:70px}
+            .section-header{min-height:80px}
+            .full-width-image{min-height:200px}
             .section-title{font-size:16px;text-align:center}
             .logo{gap:16px;font-size:24px}
             .logo-icon{width:30px;height:30px}
             .catalog-grid{min-height:280px;gap:10px}
             .reviews-list{min-height:300px}
+            .catalog-slider{min-height:280px}
         }
     </style>
     
