@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return urls;
     }
 
-    // ===== ЗАГРУЗКА ОТЗЫВОВ =====
+    // ===== ЗАГРУЗКА ОТЗЫВОВ (отложенная для LCP) =====
     async function loadReviews() {
         try {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -128,6 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+    // Отложенная загрузка отзывов (не блокирует LCP)
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => loadReviews(), { timeout: 2000 });
+    } else {
+        setTimeout(() => loadReviews(), 100);
+    }
 
     // ===== ФОРМА =====
     const form = document.querySelector('.review-form');
@@ -162,9 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== ПОДРОБНЕЕ =====
     const infoMap = {
-        1: { title: 'Винтажный жакет', desc: 'Элегантный винтажный жакет 80-х годов.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый'], price: '2 990 ₽' },
-        2: { title: 'Винтажный пиджак', desc: 'Классический пиджак в стиле oversize.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий'], price: '1 990 ₽' },
-        3: { title: 'Винтажные джинсы', desc: 'Аутентичные джинсы прямого кроя 90-х годов.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий'], price: '2 490 ₽' }
+        1: { title: 'Винтажный жакет', desc: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый', '📍 Состояние: отличное'], price: '2 990 ₽' },
+        2: { title: 'Винтажный пиджак', desc: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий', '📍 Состояние: хорошее'], price: '1 990 ₽' },
+        3: { title: 'Винтажные джинсы', desc: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий', '📍 Состояние: хорошее'], price: '2 490 ₽' }
     };
     document.querySelectorAll('.product-link').forEach(link => {
         link.onclick = (e) => {
@@ -191,6 +198,4 @@ document.addEventListener('DOMContentLoaded', function() {
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
     });
-
-    loadReviews();
 });

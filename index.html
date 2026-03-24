@@ -3,55 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bravo - магазин винтажной одежды. Качественный винтаж по доступным ценам.">
+    <meta name="description" content="Bravo - магазин винтажной одежды. Качественный винтаж по доступным ценам. Жакеты, пиджаки, джинсы с историей.">
     <meta name="keywords" content="винтаж, одежда, магазин, винтажный жакет, винтажный пиджак, винтажные джинсы">
     <meta name="author" content="Шиленков Данила Владимирович">
     <title>Bravo - магазин винтажной одежды</title>
-    <style>
-    /* Критический CSS для предотвращения CLS */
-    .catalog-grid {
-        min-height: 460px;
-    }
-    .reviews-list {
-        min-height: 200px;
-    }
-    @media (max-width: 768px) {
-        .catalog-grid { min-height: 280px; }
-        .reviews-list { min-height: 300px; }
-    }
-</style>
     
-    <!-- Оптимизированная загрузка шрифтов -->
+    <!-- Preconnect для ускорения загрузки -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    </noscript>
+    <link rel="preconnect" href="https://wrvovgkrrguvcvzeoyne.supabase.co">
     
-    <!-- Критический CSS для быстрой отрисовки -->
+    <!-- Preload LCP изображения (главное фото) -->
+    <link rel="preload" as="image" href="images/shop-photo.webp" fetchpriority="high">
+    
+    <!-- Критический CSS для предотвращения CLS -->
     <style>
+        /* Базовые сбросы и переменные */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
         body{font-family:'Inter',sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5}
         .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        
+        /* Шапка */
         .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000}
         .navbar .container{display:flex;justify-content:space-between;align-items:center}
         .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
         .logo-icon{width:35px;height:35px;object-fit:contain}
-        .full-width-image{width:100%;overflow:hidden}
-        .full-width-img{width:100%;height:auto;display:block}
+        
+        /* LCP изображение с фиксированным aspect-ratio */
+        .full-width-image{position:relative;width:100%;aspect-ratio:1200/400;background-color:var(--bg-light);overflow:hidden}
+        .full-width-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+        
+        /* Заголовки секций */
         .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px}
         .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
         .white-title{color:var(--white)}
         .section-header .section-title{margin-bottom:0}
+        
+        /* Резервирование места для динамического контента (CLS fix) */
+        .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
+        .reviews-list{min-height:200px}
+        .advantages-content{min-height:400px}
+        
+        /* Мобильная адаптация критических элементов */
         @media (max-width:768px){
             .section-title{font-size:16px;text-align:center}
             .logo{gap:16px;font-size:24px}
             .logo-icon{width:30px;height:30px}
+            .catalog-grid{min-height:280px;gap:10px}
+            .reviews-list{min-height:300px}
         }
     </style>
+    
+    <!-- Основной CSS загружается асинхронно -->
     <link rel="stylesheet" href="CSS/style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="CSS/style.css"></noscript>
+    
+    <!-- Шрифт Inter с асинхронной загрузкой -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
     <!-- ШАПКА САЙТА -->
@@ -80,47 +90,51 @@
     </nav>
 
     <main>
+        <!-- LCP ИЗОБРАЖЕНИЕ (preload) -->
         <div class="full-width-image">
-    <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" loading="eager" fetchpriority="high">
-</div>
+            <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" fetchpriority="high">
+        </div>
 
-<section id="about" class="section-with-header">
-    <div class="section-header">
-        <div class="container">
-            <h2 class="section-title white-title">О компании</h2>
-        </div>
-    </div>
-    <div class="container">
-        <div class="about-content">
-            <p class="about-text">Мы являемся модной компанией, которая продает винтажную одежду.<br>Наша цель сделать пребывание в нашем магазине комфортным и уютным.</p>
-        </div>
-    </div>
-</section>
+        <!-- О КОМПАНИИ -->
+        <section id="about" class="section-with-header">
+            <div class="section-header">
+                <div class="container">
+                    <h2 class="section-title white-title">О компании</h2>
+                </div>
+            </div>
+            <div class="container">
+                <div class="about-content">
+                    <p class="about-text">Мы являемся модной компанией, которая продает винтажную одежду.<br>Наша цель сделать пребывание в нашем магазине комфортным и уютным.</p>
+                </div>
+            </div>
+        </section>
 
-<section id="production" class="section-with-header">
-    <div class="section-header">
-        <div class="container">
-            <h2 class="section-title white-title">Наше производство</h2>
-        </div>
-    </div>
-    <div class="container">
-        <div class="production-content">
-            <p class="production-text">Наши изделия изготовлены из недорогих но качественных материалов и доступны в наших розничных магазинах, производим с заботой и доступностью для наших покупателей.<br><span class="love-text">с любовью Bravo.</span></p>
-        </div>
-        <div class="production-gallery">
-            <div class="production-image">
-                <img src="images/proiz1.webp" alt="Производство Bravo" width="300" height="200" loading="lazy">
+        <!-- НАШЕ ПРОИЗВОДСТВО -->
+        <section id="production" class="section-with-header">
+            <div class="section-header">
+                <div class="container">
+                    <h2 class="section-title white-title">Наше производство</h2>
+                </div>
             </div>
-            <div class="production-image">
-                <img src="images/proiz2.webp" alt="Производство Bravo" width="300" height="200" loading="lazy">
+            <div class="container">
+                <div class="production-content">
+                    <p class="production-text">Наши изделия изготовлены из недорогих но качественных материалов и доступны в наших розничных магазинах, производим с заботой и доступностью для наших покупателей.<br><span class="love-text">с любовью Bravo.</span></p>
+                </div>
+                <div class="production-gallery">
+                    <div class="production-image">
+                        <img src="images/proiz1.webp" alt="Производство Bravo" width="300" height="200" loading="lazy">
+                    </div>
+                    <div class="production-image">
+                        <img src="images/proiz2.webp" alt="Производство Bravo 2" width="300" height="200" loading="lazy">
+                    </div>
+                    <div class="production-image">
+                        <img src="images/proiz3.webp" alt="Производство Bravo 3" width="300" height="200" loading="lazy">
+                    </div>
+                </div>
             </div>
-            <div class="production-image">
-                <img src="images/proiz3.webp" alt="Производство Bravo" width="300" height="200" loading="lazy">
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
+        <!-- КАТАЛОГ -->
         <section id="catalog" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -163,6 +177,7 @@
             </div>
         </section>
 
+        <!-- НАШИ ПРЕИМУЩЕСТВА -->
         <section id="advantages" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -214,6 +229,7 @@
             </div>
         </section>
 
+        <!-- ОТЗЫВЫ -->
         <section id="reviews" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -256,6 +272,7 @@
             </div>
         </section>
 
+        <!-- НАШИ КОНТАКТЫ -->
         <section id="contacts" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -285,6 +302,7 @@
         </section>
     </main>
 
+    <!-- ПОДВАЛ -->
     <footer class="footer">
         <div class="container">
             <div class="footer-top">
