@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Подключаем шрифт Inter с оптимизацией -->
+    <!-- Подключаем шрифт Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Подключаем CSS -->
@@ -26,7 +26,6 @@
                 Bravo
             </a>
             
-            <!-- Бургер-меню для мобильных -->
             <div class="burger-menu" id="burgerMenu">
                 <span></span>
                 <span></span>
@@ -45,7 +44,7 @@
     </nav>
 
     <main>
-        <!-- ФОТО ПОД ШАПКОЙ - ОПТИМИЗИРОВАНО -->
+        <!-- ФОТО ПОД ШАПКОЙ -->
         <div class="full-width-image">
             <img src="images/shop-photo.webp" 
                  alt="Магазин Bravo" 
@@ -81,7 +80,6 @@
                 <div class="production-content">
                     <p class="production-text">Наши изделия изготовлены из недорогих но качественных материалов и доступны в наших розничных магазинах, производим с заботой и доступностью для наших покупателей.<br><span class="love-text">с любовью Bravo.</span></p>
                 </div>
-                <!-- Три фото под текстом -->
                 <div class="production-gallery">
                     <div class="production-image">
                         <img src="images/proiz1.webp" alt="Производство 1" width="400" height="300" loading="lazy">
@@ -212,9 +210,10 @@
                             <span class="star" data-rating="5">★</span>
                         </div>
                         
-                        <div class="photo-upload">
+                        <div class="photo-upload" id="photoUploadBtn">
                             <span class="photo-label">Добавить фото</span>
                             <span class="photo-note">до 3 изображений</span>
+                            <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
                         </div>
                         
                         <div class="checkbox-wrapper">
@@ -297,7 +296,7 @@
         </div>
     </footer>
 
-    <!-- Подключаем JavaScript с defer для оптимизации -->
-    <script src="js/script.js" defer></script>
+    <!-- Подключаем JavaScript -->
+    <script src="js/script.js"></script>
 </body>
 </html>

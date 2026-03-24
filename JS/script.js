@@ -1,4 +1,4 @@
-// Оптимизированная версия с lazy loading и асинхронной загрузкой
+// Оптимизированная версия с lazy loading
 document.addEventListener('DOMContentLoaded', function() {
     // Откладываем выполнение не критичных функций
     setTimeout(() => {
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initRatingStars();
         initReviewForm();
         initSmoothScroll();
+        initPhotoUpload();
     }, 0);
 });
 
@@ -185,6 +186,28 @@ function initSmoothScroll() {
             }
         });
     });
+}
+
+function initPhotoUpload() {
+    const photoUploadBtn = document.getElementById('photoUploadBtn');
+    const photoInput = document.getElementById('photoInput');
+    
+    if (photoUploadBtn && photoInput) {
+        photoUploadBtn.addEventListener('click', function() {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                if (files.length > 3) {
+                    alert('Можно загрузить не более 3 фото');
+                    return;
+                }
+                alert(`Выбрано ${files.length} фото для загрузки`);
+            }
+        });
+    }
 }
 
 function escapeHtml(str) {

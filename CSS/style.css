@@ -913,4 +913,18 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
+
+    /* Фото загрузка */
+#photoUploadBtn {
+    cursor: pointer;
+}
+
+.photo-upload {
+    cursor: pointer;
+}
+
+.photo-upload:hover {
+    background-color: var(--light-gray);
+}
+
 }
