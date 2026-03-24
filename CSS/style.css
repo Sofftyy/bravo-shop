@@ -29,7 +29,7 @@ body {
     padding: 0 20px;
 }
 
-/* ТИПОГРАФИЯ */
+/* ТИПОГРАФИЯ*/
 .section-title {
     font-size: 36px;
     font-weight: 600;
@@ -81,7 +81,7 @@ body {
     object-fit: contain;
 }
 
-/* Бургер-меню */
+/* меню */
 .burger-menu {
     display: none;
     flex-direction: column;
@@ -127,22 +127,16 @@ body {
     color: var(--accent);
 }
 
-/* ФОТО ПОД ШАПКОЙ - ОПТИМИЗАЦИЯ CLS */
+/* ФОТО ПОД ШАПКОЙ */
 .full-width-image {
-    position: relative;
     width: 100%;
-    aspect-ratio: 1200 / 600;
-    background-color: var(--dark-blue);
     overflow: hidden;
 }
 
 .full-width-img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
 }
 
 /* СИНИЕ ПОЛОСЫ-ЗАГОЛОВКИ */
@@ -190,7 +184,7 @@ body {
     display: inline-block;
 }
 
-/* Галерея производства - ОПТИМИЗАЦИЯ CLS */
+/* производство - три фото */
 .production-gallery {
     display: flex;
     justify-content: space-between;
@@ -200,21 +194,17 @@ body {
 }
 
 .production-image {
-    position: relative;
     flex: 1;
     min-width: 200px;
-    aspect-ratio: 400 / 300;
     border-radius: 10px;
     overflow: hidden;
     background: var(--dark-blue);
 }
 
 .production-image img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
     object-fit: cover;
     transition: transform 0.3s;
 }
@@ -236,6 +226,8 @@ body {
     display: flex;
     gap: 40px;
     transition: transform 0.3s ease;
+    flex-wrap: nowrap;
+    justify-content: center;
 }
 
 .product-card {
@@ -249,18 +241,14 @@ body {
 }
 
 .product-image {
-    position: relative;
     width: 358px;
-    aspect-ratio: 358 / 399;
+    height: 399px;
     overflow: hidden;
     background: var(--dark-blue);
     border-radius: 10px;
 }
 
 .product-image img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -466,6 +454,13 @@ body {
     border: 2px dashed var(--light-gray);
     border-radius: 5px;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.photo-upload:hover {
+    border-color: var(--accent);
+    background-color: rgba(179, 84, 55, 0.05);
 }
 
 .photo-label {
@@ -477,8 +472,143 @@ body {
 }
 
 .photo-note {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--gray);
+}
+
+/* Стили для превью перед отправкой */
+.photo-previews {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.preview-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--light-gray);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-remove {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    border: 2px solid white;
+    transition: background 0.3s;
+}
+
+.preview-remove:hover {
+    background: #9e4a30;
+}
+
+/* КРАСИВЫЕ СТИЛИ ДЛЯ ФОТО В ОТЗЫВАХ */
+.review-photos {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.review-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--light-gray);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.review-photo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    border-color: var(--accent);
+}
+
+/* Стили для информации о товаре */
+.product-info {
+    margin-top: 15px;
+    animation: fadeIn 0.3s ease;
+    width: 100%;
+}
+
+.product-info div {
+    background: var(--white);
+    border: 1px solid var(--light-gray);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.product-info h4 {
+    color: var(--dark-blue);
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+.product-info p {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.product-info ul {
+    margin-bottom: 15px;
+    padding-left: 20px;
+    color: #555;
+    list-style-type: none;
+}
+
+.product-info li {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.product-info button {
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.product-info button:hover {
+    background-color: #9e4a30 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(179, 84, 55, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .checkbox-wrapper {
@@ -561,6 +691,7 @@ body {
     position: relative;
 }
 
+/* Верхняя часть подвала */
 .footer-top {
     display: flex;
     justify-content: space-between;
@@ -569,6 +700,7 @@ body {
     padding-right: 0;
 }
 
+/* Левая часть - меню */
 .footer-menu-block {
     flex: 0 0 auto;
 }
@@ -600,6 +732,7 @@ body {
     color: var(--accent);
 }
 
+/* Правая часть - соцсети */
 .footer-social-block {
     flex: 0 0 auto;
     text-align: left;
@@ -642,6 +775,7 @@ body {
     object-fit: contain;
 }
 
+/* Нижняя часть подвала */
 .footer-bottom {
     padding-left: 60px;
 }
@@ -663,8 +797,28 @@ body {
     margin-top: 12px;
 }
 
-/* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
+/* Стили для товара в отзыве */
+.review-product {
+    font-size: 14px;
+    color: var(--accent);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Заглушка, если нет отзывов */
+.no-reviews {
+    text-align: center;
+    font-size: 18px;
+    color: var(--gray);
+    padding: 40px 20px;
+    background: var(--white);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+/* ========== УЛУЧШЕННАЯ МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
 @media (max-width: 768px) {
+    /* меню */
     .burger-menu {
         display: flex;
     }
@@ -692,6 +846,7 @@ body {
         font-size: 18px;
     }
     
+    /* Логотип */
     .logo {
         gap: 16px;
         font-size: 24px;
@@ -703,6 +858,7 @@ body {
         height: 30px;
     }
     
+    /* Заголовки секций */
     .section-title {
         font-size: 16px;
         font-weight: 600;
@@ -717,14 +873,12 @@ body {
         text-align: center;
     }
     
+    /* Расстояние между разделами */
     .section-with-header {
         padding: 0 0 80px 0;
     }
     
-    .full-width-image {
-        aspect-ratio: 16 / 9;
-    }
-    
+    /* Текст о компании и производство */
     .about-text,
     .production-text,
     .love-text {
@@ -733,6 +887,7 @@ body {
         text-align: center;
     }
     
+    /* Галерея производства */
     .production-gallery {
         flex-direction: column;
         gap: 15px;
@@ -740,9 +895,9 @@ body {
     
     .production-image {
         width: 100%;
-        min-width: auto;
     }
     
+    /* КАТАЛОГ - улучшенная мобильная версия */
     .subsection-title {
         font-size: 14px;
         text-align: center;
@@ -750,23 +905,30 @@ body {
     }
     
     .catalog-slider {
-        gap: 15px;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .catalog-grid {
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
     }
     
     .product-card {
-        width: 100px;
+        width: 140px;
         gap: 8px;
     }
     
     .product-image {
-        width: 100px;
-        aspect-ratio: 100 / 120;
+        width: 140px;
+        height: 160px;
     }
     
     .product-link {
-        font-size: 10px;
-        padding: 6px 12px;
-        border-radius: 15px;
+        font-size: 12px;
+        padding: 8px 16px;
+        border-radius: 20px;
         width: 100%;
     }
     
@@ -780,6 +942,44 @@ body {
         height: 30px;
     }
     
+    /* ИНФОРМАЦИЯ О ТОВАРЕ НА МОБИЛЬНЫХ - УЛУЧШЕНО */
+    .product-info {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .product-info div {
+        padding: 12px !important;
+    }
+    
+    .product-info h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .product-info p {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+    
+    .product-info ul {
+        margin-bottom: 10px;
+        padding-left: 15px;
+    }
+    
+    .product-info li {
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+    
+    .product-info button {
+        padding: 8px 16px !important;
+        font-size: 12px !important;
+        width: 100%;
+    }
+    
+    /* Преимущества */
     .advantage-block {
         flex-direction: column;
         text-align: center;
@@ -804,6 +1004,7 @@ body {
         line-height: 1.4;
     }
     
+    /* Отзывы */
     .review-author {
         font-size: 16px;
         font-weight: 300;
@@ -820,6 +1021,26 @@ body {
     .review-text {
         font-size: 12px;
         font-weight: 300;
+    }
+
+    .review-product {
+        font-size: 11px;
+        margin-top: 8px;
+    }
+
+    /* Адаптация фото для мобильных */
+    .review-photos {
+        gap: 8px;
+    }
+
+    .review-photo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .preview-item {
+        width: 60px;
+        height: 60px;
     }
     
     .form-title {
@@ -856,6 +1077,7 @@ body {
         width: 100%;
     }
     
+    /* Контакты */
     .contacts-info {
         gap: 24px;
     }
@@ -866,6 +1088,7 @@ body {
         font-weight: 300;
     }
     
+    /* Подвал */
     .footer-top {
         flex-direction: column;
         gap: 30px;
