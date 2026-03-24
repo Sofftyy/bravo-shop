@@ -1090,4 +1090,30 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
+
+/* Задаём явные размеры для текстовых элементов */
+h1, h2, h3, h4, .section-title, .subsection-title, .advantage-title {
+    line-height: 1.2;
+}
+
+p, .about-text, .production-text, .advantage-text, .review-text {
+    line-height: 1.5;
+}
+
+/* Предотвращаем смещение при загрузке шрифтов */
+body {
+    font-display: swap;
+}
+
+/* Резервируем место для загружаемых элементов */
+.section-header {
+    min-height: 106px;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        min-height: 80px;
+    }
+}
+
 }

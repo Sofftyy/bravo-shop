@@ -15,8 +15,6 @@
     
     <!-- Preload LCP изображения (главное фото) -->
     <link rel="preload" as="image" href="images/shop-photo.webp" fetchpriority="high">
-    
-    <!-- Критический CSS для предотвращения CLS -->
     <style>
         /* Базовые сбросы и переменные */
         *{margin:0;padding:0;box-sizing:border-box}
@@ -40,10 +38,21 @@
         .white-title{color:var(--white)}
         .section-header .section-title{margin-bottom:0}
         
-        /* Резервирование места для динамического контента (CLS fix) */
+        /* Резервирование места для динамического контента */
         .catalog-grid{min-height:460px;display:flex;gap:40px;justify-content:center;flex-wrap:nowrap}
         .reviews-list{min-height:200px}
         .advantages-content{min-height:400px}
+        
+        /* Задаём fallback шрифт, чтобы предотвратить смещение */
+        body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-display: swap;
+        }
+    
+        /* Резервируем место под текст до загрузки шрифта */
+        h1, h2, h3, h4, p, a, span, li, button {
+        font-family: inherit;
+        }
         
         /* Мобильная адаптация критических элементов */
         @media (max-width:768px){
