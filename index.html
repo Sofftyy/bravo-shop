@@ -8,7 +8,7 @@
     <meta name="author" content="Шиленков Данила Владимирович">
     <title>Bravo - магазин винтажной одежды</title>
     
-    <!-- Оптимизированная загрузка шрифтов - не блокирует отрисовку -->
+    <!-- Оптимизированная загрузка шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -16,7 +16,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     </noscript>
     
-    <!-- Критический CSS встраиваем для быстрой отрисовки -->
+    <!-- Критический CSS -->
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
@@ -67,12 +67,10 @@
     </nav>
 
     <main>
-        <!-- ФОТО ПОД ШАПКОЙ -->
         <div class="full-width-image">
             <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" loading="eager">
         </div>
 
-        <!-- О КОМПАНИИ -->
         <section id="about" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -86,7 +84,6 @@
             </div>
         </section>
 
-        <!-- НАШЕ ПРОИЗВОДСТВО -->
         <section id="production" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -111,7 +108,6 @@
             </div>
         </section>
 
-        <!-- КАТАЛОГ -->
         <section id="catalog" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -154,7 +150,6 @@
             </div>
         </section>
 
-        <!-- НАШИ ПРЕИМУЩЕСТВА -->
         <section id="advantages" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -206,7 +201,6 @@
             </div>
         </section>
 
-        <!-- ОТЗЫВЫ -->
         <section id="reviews" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -214,9 +208,7 @@
                 </div>
             </div>
             <div class="container">
-                <div class="reviews-list" id="reviewsList">
-                    <!-- Отзывы будут загружаться из Supabase -->
-                </div>
+                <div class="reviews-list" id="reviewsList"></div>
                 
                 <div class="review-form-container">
                     <h3 class="form-title">Написать отзыв</h3>
@@ -233,6 +225,7 @@
                             <span class="star" data-rating="5">★</span>
                         </div>
                         
+                        <!-- БЛОК ЗАГРУЗКИ ФОТО (ИСПРАВЛЕН) -->
                         <div class="photo-upload" id="photoUpload">
                             <span class="photo-label">Добавить фото</span>
                             <span class="photo-note" id="photoCount">0/3 изображений</span>
@@ -251,7 +244,6 @@
             </div>
         </section>
 
-        <!-- НАШИ КОНТАКТЫ -->
         <section id="contacts" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -264,17 +256,14 @@
                         <p class="contact-label">Приезжайте к нам в магазин по адресу:</p>
                         <p class="contact-value">улица Маршала Чуйкова, 31, Волгоград, 400066</p>
                     </div>
-                    
                     <div class="contact-item">
                         <p class="contact-label">Звонки принимаем с 9:00 до 21:00</p>
                         <p class="contact-value">8 (800) 335 35 35, 28-48-39</p>
                     </div>
-                    
                     <div class="contact-item">
                         <p class="contact-label">Задайте ваш вопрос на почту</p>
                         <p class="contact-value">bravolg@softy.ru</p>
                     </div>
-                    
                     <div class="contact-item">
                         <p class="contact-label">Присоединяйся к нашей команде Bravo!</p>
                         <p class="contact-value">rabota@bravo.team</p>
@@ -284,7 +273,6 @@
         </section>
     </main>
 
-    <!-- ПОДВАЛ -->
     <footer class="footer">
         <div class="container">
             <div class="footer-top">
@@ -297,21 +285,19 @@
                         <li><a href="#reviews">Отзывы</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-social-block">
                     <h3 class="footer-social-title">Мы в соц. сетях</h3>
                     <p class="footer-social-text">Подписывайся на наши социальные сети.<br>Получай информацию о скидках и акциях.</p>
                     <div class="footer-social-icons">
-                        <a href="https://vk.com/ilovekanekiken" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Вконтакте">
+                        <a href="https://vk.com/ilovekanekiken" target="_blank" rel="noopener noreferrer" class="footer-social-link">
                             <img src="images/vk.webp" alt="Вконтакте" class="footer-social-icon" width="50" height="50" loading="lazy">
                         </a>
-                        <a href="https://t.me/midexsf" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Telegram">
+                        <a href="https://t.me/midexsf" target="_blank" rel="noopener noreferrer" class="footer-social-link">
                             <img src="images/tg.webp" alt="Telegram" class="footer-social-icon" width="50" height="50" loading="lazy">
                         </a>
                     </div>
                 </div>
             </div>
-            
             <div class="footer-bottom">
                 <p class="footer-address">40066, г. Волгоград, улица Маршала Чуйкова, 31.</p>
                 <p class="footer-phone">8 (800) 335 35 35, 28-48-39</p>
@@ -320,8 +306,7 @@
         </div>
     </footer>
 
-    <!-- Подключаем библиотеку Supabase с defer для неблокирующей загрузки -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="JS/script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="JS/script.js"></script>
 </body>
 </html>
