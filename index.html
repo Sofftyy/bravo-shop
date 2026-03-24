@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bravo - магазин винтажной одежды</title>
-    <!-- Подключаем шрифт Inter -->
+    <meta name="description" content="Магазин винтажной одежды Bravo. Уютная и комфортная одежда для миллениалов.">
+    <meta name="keywords" content="винтаж, одежда, магазин, Bravo">
+    
+    <!-- Preconnect для быстрой загрузки шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Подключаем шрифт Inter с оптимизацией -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Подключаем CSS -->
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- ШАПКА САЙТА -->
     <nav class="navbar">
         <div class="container">
             <a href="#" class="logo">
-                <img src="images/bravo-icon.png" alt="Bravo" class="logo-icon">
+                <img src="images/bravo-icon.webp" alt="Bravo" class="logo-icon" width="35" height="35">
                 Bravo
             </a>
             
-            <!-- меню для мобильных -->
+            <!-- Бургер-меню для мобильных -->
             <div class="burger-menu" id="burgerMenu">
                 <span></span>
                 <span></span>
@@ -39,9 +45,15 @@
     </nav>
 
     <main>
-        <!-- ФОТО ПОД ШАПКОЙ -->
+        <!-- ФОТО ПОД ШАПКОЙ - ОПТИМИЗИРОВАНО -->
         <div class="full-width-image">
-            <img src="images/shop-photo.png" alt="Магазин Bravo" class="full-width-img">
+            <img src="images/shop-photo.webp" 
+                 alt="Магазин Bravo" 
+                 class="full-width-img" 
+                 width="1200" 
+                 height="600"
+                 loading="eager"
+                 fetchpriority="high">
         </div>
 
         <!-- О КОМПАНИИ -->
@@ -72,19 +84,19 @@
                 <!-- Три фото под текстом -->
                 <div class="production-gallery">
                     <div class="production-image">
-                        <img src="images/proiz1.png" alt="Производство 1">
+                        <img src="images/proiz1.webp" alt="Производство 1" width="400" height="300" loading="lazy">
                     </div>
                     <div class="production-image">
-                        <img src="images/proiz2.png" alt="Производство 2">
+                        <img src="images/proiz2.webp" alt="Производство 2" width="400" height="300" loading="lazy">
                     </div>
                     <div class="production-image">
-                        <img src="images/proiz3.png" alt="Производство 3">
+                        <img src="images/proiz3.webp" alt="Производство 3" width="400" height="300" loading="lazy">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- КАТАЛОГ-->
+        <!-- КАТАЛОГ -->
         <section id="catalog" class="section-with-header">
             <div class="section-header">
                 <div class="container">
@@ -95,33 +107,27 @@
                 <h3 class="subsection-title">Новая коллекция</h3>
                 
                 <div class="catalog-slider">
-                    <button class="slider-arrow prev-arrow">
-                        <img src="images/arrow-left.png" alt="Предыдущий" class="arrow-icon">
+                    <button class="slider-arrow prev-arrow" aria-label="Предыдущий товар">
+                        <img src="images/arrow-left.webp" alt="Предыдущий" class="arrow-icon" width="50" height="50">
                     </button>
                     
                     <div class="catalog-grid" id="catalogGrid">
-                        <div class="product-card" data-product-id="1">
+                        <div class="product-card">
                             <div class="product-image">
-                                <img src="images/product1.png" alt="Винтажный жакет">
+                                <img src="images/product1.webp" alt="Винтажная куртка" width="358" height="399" loading="lazy">
                             </div>
-                            <a href="#" class="product-link" data-product="1">Подробнее</a>
+                            <a href="#" class="product-link">Подробнее</a>
                         </div>
-                        <div class="product-card" data-product-id="2">
+                        <div class="product-card">
                             <div class="product-image">
-                                <img src="images/product2.png" alt="Винтажный пиджак">
+                                <img src="images/product2.webp" alt="Винтажное платье" width="358" height="399" loading="lazy">
                             </div>
-                            <a href="#" class="product-link" data-product="2">Подробнее</a>
-                        </div>
-                        <div class="product-card" data-product-id="3">
-                            <div class="product-image">
-                                <img src="images/product3.png" alt="Винтажные джинсы">
-                            </div>
-                            <a href="#" class="product-link" data-product="3">Подробнее</a>
+                            <a href="#" class="product-link">Подробнее</a>
                         </div>
                     </div>
                     
-                    <button class="slider-arrow next-arrow">
-                        <img src="images/arrow-right.png" alt="Следующий" class="arrow-icon">
+                    <button class="slider-arrow next-arrow" aria-label="Следующий товар">
+                        <img src="images/arrow-right.webp" alt="Следующий" class="arrow-icon" width="50" height="50">
                     </button>
                 </div>
             </div>
@@ -136,10 +142,9 @@
             </div>
             <div class="container">
                 <div class="advantages-content">
-                    <!-- Доступные цены -->
                     <div class="advantage-block">
                         <div class="advantage-image">
-                            <img src="images/preim1.png" alt="Доступные цены">
+                            <img src="images/preim1.webp" alt="Доступные цены" width="100" height="100" loading="lazy">
                         </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Доступные цены:</h3>
@@ -147,10 +152,9 @@
                         </div>
                     </div>
                     
-                    <!-- Качество -->
                     <div class="advantage-block">
                         <div class="advantage-image">
-                            <img src="images/preim2.png" alt="Качество">
+                            <img src="images/preim2.webp" alt="Качество" width="100" height="100" loading="lazy">
                         </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Качество:</h3>
@@ -158,10 +162,9 @@
                         </div>
                     </div>
                     
-                    <!-- Уютная атмосфера -->
                     <div class="advantage-block">
                         <div class="advantage-image">
-                            <img src="images/preim3.png" alt="Уютная атмосфера">
+                            <img src="images/preim3.webp" alt="Уютная атмосфера" width="100" height="100" loading="lazy">
                         </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Уютная атмосфера:</h3>
@@ -169,10 +172,9 @@
                         </div>
                     </div>
                     
-                    <!-- Уникальный стиль -->
                     <div class="advantage-block">
                         <div class="advantage-image">
-                            <img src="images/preim4.png" alt="Уникальный стиль">
+                            <img src="images/preim4.webp" alt="Уникальный стиль" width="100" height="100" loading="lazy">
                         </div>
                         <div class="advantage-text-block">
                             <h3 class="advantage-title">Уникальный стиль:</h3>
@@ -192,7 +194,7 @@
             </div>
             <div class="container">
                 <div class="reviews-list" id="reviewsList">
-                    <!-- Отзывы будут загружаться из Supabase -->
+                    <!-- Отзывы будут загружаться из localStorage -->
                 </div>
                 
                 <div class="review-form-container">
@@ -210,12 +212,9 @@
                             <span class="star" data-rating="5">★</span>
                         </div>
                         
-                        <!-- Блок загрузки фото -->
-                        <div class="photo-upload" id="photoUpload">
+                        <div class="photo-upload">
                             <span class="photo-label">Добавить фото</span>
-                            <span class="photo-note" id="photoCount">0/3 изображений</span>
-                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
-                            <div class="photo-previews" id="photoPreviews"></div>
+                            <span class="photo-note">до 3 изображений</span>
                         </div>
                         
                         <div class="checkbox-wrapper">
@@ -265,9 +264,7 @@
     <!-- ПОДВАЛ -->
     <footer class="footer">
         <div class="container">
-            <!-- Верхняя часть с меню и соцсетями -->
             <div class="footer-top">
-                <!-- Левая часть - меню -->
                 <div class="footer-menu-block">
                     <ul class="footer-menu">
                         <li><a href="#about">О компании</a></li>
@@ -278,33 +275,29 @@
                     </ul>
                 </div>
                 
-                <!-- Правая часть - соцсети с правильными ссылками -->
                 <div class="footer-social-block">
                     <h3 class="footer-social-title">Мы в соц. сетях</h3>
                     <p class="footer-social-text">Подписывайся на наши социальные сети.<br>Получай информацию о скидках и акциях.</p>
                     <div class="footer-social-icons">
-                        <a href="https://vk.com/ilovekanekiken" target="_blank" class="footer-social-link">
-                            <img src="images/vk.png" alt="Вконтакте" class="footer-social-icon">
+                        <a href="#" class="footer-social-link" aria-label="Вконтакте">
+                            <img src="images/vk.webp" alt="Вконтакте" class="footer-social-icon" width="50" height="50" loading="lazy">
                         </a>
-                        <a href="https://t.me/midexsf" target="_blank" class="footer-social-link">
-                            <img src="images/tg.png" alt="Telegram" class="footer-social-icon">
+                        <a href="#" class="footer-social-link" aria-label="Telegram">
+                            <img src="images/tg.webp" alt="Telegram" class="footer-social-icon" width="50" height="50" loading="lazy">
                         </a>
                     </div>
                 </div>
             </div>
             
-            <!-- Нижняя часть с адресом -->
             <div class="footer-bottom">
                 <p class="footer-address">40066, г. Волгоград, улица Маршала Чуйкова, 31.</p>
                 <p class="footer-phone">8 (800) 335 35 35, 28-48-39</p>
-                <p class="footer-copyright">© 2026, Шиленков Данила Владимирович.</p>
+                <p class="footer-copyright">© 2025, Шиленков Данила Владимирович.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Подключаем библиотеку Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Подключаем JavaScript -->
-    <script src="JS/script.js"></script>
+    <!-- Подключаем JavaScript с defer для оптимизации -->
+    <script src="js/script.js" defer></script>
 </body>
 </html>
