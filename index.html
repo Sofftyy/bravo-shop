@@ -7,6 +7,19 @@
     <meta name="keywords" content="винтаж, одежда, магазин, винтажный жакет, винтажный пиджак, винтажные джинсы">
     <meta name="author" content="Шиленков Данила Владимирович">
     <title>Bravo - магазин винтажной одежды</title>
+    <style>
+    /* Критический CSS для предотвращения CLS */
+    .catalog-grid {
+        min-height: 460px;
+    }
+    .reviews-list {
+        min-height: 200px;
+    }
+    @media (max-width: 768px) {
+        .catalog-grid { min-height: 280px; }
+        .reviews-list { min-height: 300px; }
+    }
+</style>
     
     <!-- Оптимизированная загрузка шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

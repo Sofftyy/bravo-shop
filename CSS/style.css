@@ -1369,4 +1369,77 @@ img {
     animation: fadeIn 0.2s ease;
 }
 
+/* =====  ФИКСЫ ДЛЯ CLS ===== */
+
+/* 1. Фиксируем размеры каталога до загрузки контента */
+.catalog-section {
+    contain: layout style paint;
+}
+
+.catalog-grid {
+    min-height: 460px;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+/* 2. Фиксируем размеры карточек товаров */
+.product-card {
+    width: 358px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.product-image {
+    width: 358px;
+    height: 399px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--dark-blue);
+}
+
+/* 3. Фиксируем размеры отзывов */
+.reviews-list {
+    min-height: 200px;
+}
+
+.review-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* 4. Предотвращаем скачки при загрузке Supabase */
+.supabase-loaded {
+    opacity: 1;
+    transition: opacity 0.1s;
+}
+
+/* 5. Фикс для мобильных */
+@media (max-width: 768px) {
+    .catalog-grid {
+        min-height: 280px;
+        gap: 10px;
+    }
+    
+    .product-card {
+        width: 140px;
+    }
+    
+    .product-image {
+        width: 140px;
+        height: 160px;
+    }
+    
+    .reviews-list {
+        min-height: 300px;
+    }
+}
+
 }

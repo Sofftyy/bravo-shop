@@ -1,72 +1,53 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ===== МЕНЮ (БУРГЕР) =====
+    // ===== МЕНЮ =====
     const burgerMenu = document.getElementById('burgerMenu');
     const navMenu = document.getElementById('navMenu');
-    
     if (burgerMenu && navMenu) {
         burgerMenu.addEventListener('click', function() {
             burgerMenu.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
-        
-        const menuLinks = navMenu.querySelectorAll('a');
-        menuLinks.forEach(link => {
-            link.addEventListener('click', function() {
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
                 burgerMenu.classList.remove('active');
                 navMenu.classList.remove('active');
             });
         });
     }
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ТОВАРОВ =====
+    // ===== КАТАЛОГ =====
     const catalogGrid = document.getElementById('catalogGrid');
     const prevArrow = document.querySelector('.prev-arrow');
     const nextArrow = document.querySelector('.next-arrow');
     let currentIndex = 0;
-
     if (catalogGrid && prevArrow && nextArrow) {
         const products = Array.from(catalogGrid.children);
-        const totalProducts = products.length;
-        
-        function showProducts(index) {
-            products.forEach(product => {
-                product.style.display = 'none';
-            });
+        const total = products.length;
+        const showProducts = (index) => {
+            products.forEach(p => p.style.display = 'none');
             for (let i = 0; i < 2; i++) {
-                const productIndex = (index + i) % totalProducts;
-                products[productIndex].style.display = 'flex';
+                products[(index + i) % total].style.display = 'flex';
             }
-        }
-        
-        prevArrow.addEventListener('click', function() {
-            currentIndex = (currentIndex - 1 + totalProducts) % totalProducts;
-            showProducts(currentIndex);
-        });
-        
-        nextArrow.addEventListener('click', function() {
-            currentIndex = (currentIndex + 1) % totalProducts;
-            showProducts(currentIndex);
-        });
-        
+        };
+        prevArrow.onclick = () => { currentIndex = (currentIndex - 1 + total) % total; showProducts(currentIndex); };
+        nextArrow.onclick = () => { currentIndex = (currentIndex + 1) % total; showProducts(currentIndex); };
         showProducts(0);
     }
 
     // ===== РЕЙТИНГ =====
-    const stars = document.querySelectorAll('.rating-input .star');
-    stars.forEach((star, index) => {
-        star.addEventListener('click', function() {
-            stars.forEach(s => s.classList.remove('active'));
-            for(let i = 0; i <= index; i++) {
-                stars[i].classList.add('active');
-            }
-        });
+    document.querySelectorAll('.rating-input .star').forEach((star, i) => {
+        star.onclick = () => {
+            star.parentElement.querySelectorAll('.star').forEach((s, idx) => {
+                s.classList.toggle('active', idx <= i);
+            });
+        };
     });
 
-    // ===== НАСТРОЙКИ SUPABASE =====
+    // ===== SUPABASE =====
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО =====
+    // ===== ФОТО =====
     const photoLabel = document.getElementById('photoLabel');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -75,193 +56,140 @@ document.addEventListener('DOMContentLoaded', function() {
     const MAX_PHOTOS = 3;
 
     if (photoLabel && photoInput) {
-        photoLabel.addEventListener('click', function(e) {
-            e.preventDefault();
-            photoInput.click();
-        });
-        
-        photoInput.addEventListener('change', function(e) {
+        photoLabel.onclick = (e) => { e.preventDefault(); photoInput.click(); };
+        photoInput.onchange = (e) => {
             const files = Array.from(e.target.files);
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
                 photoInput.value = '';
                 return;
             }
-            
             files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
-                    return;
-                }
-                if (!file.type.startsWith('image/')) {
-                    alert(`Файл ${file.name} не является изображением`);
-                    return;
-                }
+                if (file.size > 5 * 1024 * 1024) return alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
+                if (!file.type.startsWith('image/')) return alert(`Файл ${file.name} не является изображением`);
                 selectedFiles.push(file);
-                
                 const reader = new FileReader();
-                reader.onload = function(ev) {
-                    const previewDiv = document.createElement('div');
-                    previewDiv.className = 'preview-item';
-                    previewDiv.innerHTML = `
-                        <img src="${ev.target.result}" alt="Preview">
-                        <span class="preview-remove" data-filename="${file.name}">×</span>
-                    `;
-                    previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
+                reader.onload = (ev) => {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `<img src="${ev.target.result}" alt="Preview"><span class="preview-remove">×</span>`;
+                    div.querySelector('.preview-remove').onclick = () => {
                         selectedFiles = selectedFiles.filter(f => f.name !== file.name);
-                        previewDiv.remove();
-                        updatePhotoCount();
-                    });
-                    if (photoPreviews) photoPreviews.appendChild(previewDiv);
+                        div.remove();
+                        if (photoCount) photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
+                    };
+                    if (photoPreviews) photoPreviews.appendChild(div);
                 };
                 reader.readAsDataURL(file);
             });
-            
-            updatePhotoCount();
+            if (photoCount) photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
             photoInput.value = '';
-        });
-        
-        function updatePhotoCount() {
-            if (photoCount) {
-                photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
-            }
-        }
+        };
     }
 
-    // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
+    // ===== ЗАГРУЗКА ФОТО =====
     async function uploadPhotos(files, reviewId) {
-        const uploadedUrls = [];
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const urls = [];
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `review-${reviewId}-${Date.now()}-${i}.${fileExt}`;
-            const filePath = `reviews/${fileName}`;
+            const ext = file.name.split('.').pop();
+            const path = `reviews/review-${reviewId}-${Date.now()}-${i}.${ext}`;
             try {
-                const { error } = await supabase.storage.from('review-photos').upload(filePath, file);
-                if (error) throw error;
-                const { data: { publicUrl } } = supabase.storage.from('review-photos').getPublicUrl(filePath);
-                uploadedUrls.push(publicUrl);
-            } catch (error) {
-                console.error('Ошибка загрузки фото:', error);
-            }
+                await supabase.storage.from('review-photos').upload(path, file);
+                const { data: { publicUrl } } = supabase.storage.from('review-photos').getPublicUrl(path);
+                urls.push(publicUrl);
+            } catch(e) { console.error(e); }
         }
-        return uploadedUrls;
+        return urls;
     }
 
     // ===== ЗАГРУЗКА ОТЗЫВОВ =====
     async function loadReviews() {
         try {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            const { data: reviews, error } = await supabase.from('v_recent_reviews').select('*');
-            if (error) throw error;
-            const reviewsList = document.querySelector('.reviews-list');
-            if (!reviewsList) return;
-            reviewsList.innerHTML = '';
-            if (reviews && reviews.length > 0) {
-                reviews.forEach(review => {
-                    const reviewCard = document.createElement('div');
-                    reviewCard.className = 'review-card';
-                    const reviewDate = review.review_date ? new Date(review.review_date).toLocaleDateString('ru-RU') : 'Дата не указана';
-                    const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-                    let cardHtml = `
-                        <div class="review-header">
-                            <span class="review-author">${escapeHtml(review.user_name)}</span>
-                            <span class="review-date">${reviewDate}</span>
-                        </div>
-                        <div class="review-rating">${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}</div>
-                        <p class="review-text">${escapeHtml(review.review_text)}</p>
-                        <div class="review-product">Товар: ${escapeHtml(review.product_name)}</div>`;
-                    if (review.photos && review.photos.length > 0) {
-                        cardHtml += '<div class="review-photos">';
-                        review.photos.forEach(photoUrl => { cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" loading="lazy">`; });
-                        cardHtml += '</div>';
-                    }
-                    reviewCard.innerHTML = cardHtml;
-                    reviewsList.appendChild(reviewCard);
-                });
-            } else {
-                reviewsList.innerHTML = '<p class="no-reviews">Пока нет отзывов. Будьте первым!</p>';
-            }
-        } catch (error) {
-            console.error('Ошибка при загрузке отзывов:', error);
-        }
+            const { data: reviews } = await supabase.from('v_recent_reviews').select('*');
+            const container = document.querySelector('.reviews-list');
+            if (!container) return;
+            container.innerHTML = reviews?.length ? reviews.map(r => {
+                const date = r.review_date ? new Date(r.review_date).toLocaleDateString('ru-RU') : 'Дата не указана';
+                const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                let photosHtml = '';
+                if (r.photos?.length) photosHtml = `<div class="review-photos">${r.photos.map(p => `<img src="${p}" class="review-photo" loading="lazy">`).join('')}</div>`;
+                return `<div class="review-card">
+                    <div class="review-header"><span class="review-author">${escapeHtml(r.user_name)}</span><span class="review-date">${date}</span></div>
+                    <div class="review-rating">${stars.split('').map(s => `<span class="star">${s}</span>`).join('')}</div>
+                    <p class="review-text">${escapeHtml(r.review_text)}</p>
+                    <div class="review-product">Товар: ${escapeHtml(r.product_name)}</div>
+                    ${photosHtml}
+                </div>`;
+            }).join('') : '<p class="no-reviews">Пока нет отзывов. Будьте первым!</p>';
+        } catch(e) { console.error(e); }
     }
     
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+    function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
-    // ===== ФОРМА ОТЗЫВА =====
+    // ===== ФОРМА =====
     const form = document.querySelector('.review-form');
-    if(form) {
-        form.addEventListener('submit', async function(e) {
+    if (form) {
+        form.onsubmit = async (e) => {
             e.preventDefault();
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             const name = document.querySelector('.form-input').value.trim();
             const text = document.querySelector('.form-textarea').value.trim();
             const agreement = document.getElementById('agreement');
-            const activeStars = document.querySelectorAll('.rating-input .star.active').length;
-            if(!name || !text) { alert('Пожалуйста, заполните все поля!'); return; }
-            if(!agreement.checked) { alert('Необходимо согласие на обработку персональных данных'); return; }
+            const rating = document.querySelectorAll('.rating-input .star.active').length;
+            if (!name || !text) return alert('Заполните все поля!');
+            if (!agreement?.checked) return alert('Согласие на обработку данных обязательно');
             try {
-                const { data: reviewId, error: reviewError } = await supabase.rpc('add_review', { p_product_id: 1, p_user_name: name, p_rating: activeStars, p_review_text: text, p_photos: [] });
-                if (reviewError) throw reviewError;
-                if (selectedFiles.length > 0) {
-                    const photoUrls = await uploadPhotos(selectedFiles, reviewId);
-                    await supabase.from('reviews').update({ photos: photoUrls }).eq('id', reviewId);
+                const { data: id } = await supabase.rpc('add_review', { p_product_id: 1, p_user_name: name, p_rating: rating, p_review_text: text, p_photos: [] });
+                if (selectedFiles.length) {
+                    const urls = await uploadPhotos(selectedFiles, id);
+                    await supabase.from('reviews').update({ photos: urls }).eq('id', id);
                 }
                 document.querySelector('.form-input').value = '';
                 document.querySelector('.form-textarea').value = '';
-                agreement.checked = false;
+                if (agreement) agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
                 selectedFiles = [];
                 if (photoPreviews) photoPreviews.innerHTML = '';
-                updatePhotoCount();
-                alert('✅ Отзыв успешно добавлен!');
+                if (photoCount) photoCount.textContent = `0/${MAX_PHOTOS} изображений`;
+                alert('✅ Отзыв добавлен!');
                 loadReviews();
-            } catch (error) {
-                console.error('❌ Ошибка:', error);
-                alert('❌ Ошибка: ' + error.message);
-            }
-        });
+            } catch(err) { alert('❌ Ошибка: ' + err.message); }
+        };
     }
 
-    // ===== КНОПКИ "ПОДРОБНЕЕ" =====
+    // ===== ПОДРОБНЕЕ =====
+    const infoMap = {
+        1: { title: 'Винтажный жакет', desc: 'Элегантный винтажный жакет 80-х годов.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый'], price: '2 990 ₽' },
+        2: { title: 'Винтажный пиджак', desc: 'Классический пиджак в стиле oversize.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий'], price: '1 990 ₽' },
+        3: { title: 'Винтажные джинсы', desc: 'Аутентичные джинсы прямого кроя 90-х годов.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий'], price: '2 490 ₽' }
+    };
     document.querySelectorAll('.product-link').forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.onclick = (e) => {
             e.preventDefault();
-            const productId = this.dataset.product;
-            const productCard = this.closest('.product-card');
-            const productInfo = {
-                '1': { title: 'Винтажный жакет', description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый', '📍 Состояние: отличное'], price: '2 990 ₽' },
-                '2': { title: 'Винтажный пиджак', description: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий', '📍 Состояние: хорошее'], price: '1 990 ₽' },
-                '3': { title: 'Винтажные джинсы', description: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий', '📍 Состояние: хорошее'], price: '2 490 ₽' }
-            };
-            const info = productInfo[productId];
+            const id = link.dataset.product;
+            const card = link.closest('.product-card');
+            const existing = card.querySelector('.product-info');
+            if (existing) { existing.remove(); return; }
+            const info = infoMap[id];
             if (!info) return;
-            const existingInfo = productCard.querySelector('.product-info');
-            if (existingInfo) { existingInfo.remove(); } else {
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'product-info';
-                const detailsHtml = info.details.map(detail => `<li>${detail}</li>`).join('');
-                infoDiv.innerHTML = `<div><h4>${info.title}</h4><p>${info.description}</p><ul>${detailsHtml}</ul><p class="price">${info.price}</p><button class="close-info">Закрыть</button></div>`;
-                productCard.appendChild(infoDiv);
-                infoDiv.querySelector('.close-info').addEventListener('click', function() { infoDiv.remove(); });
-            }
-        });
+            const div = document.createElement('div');
+            div.className = 'product-info';
+            div.innerHTML = `<div><h4>${info.title}</h4><p>${info.desc}</p><ul>${info.details.map(d => `<li>${d}</li>`).join('')}</ul><p class="price">${info.price}</p><button class="close-info">Закрыть</button></div>`;
+            card.appendChild(div);
+            div.querySelector('.close-info').onclick = () => div.remove();
+        };
     });
 
-    // ===== ПЛАВНАЯ ПРОКРУТКА =====
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+    // ===== ПРОКРУТКА =====
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.onclick = (e) => {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if(target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-        });
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
     });
 
     loadReviews();
