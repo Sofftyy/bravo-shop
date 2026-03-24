@@ -1146,30 +1146,70 @@ body {
         font-size: 10px;
     }
 
-/* Стабилизация макета для улучшения CLS */
-.product-card, .review-card, .advantage-block {
-    contain: layout style paint;
-}
-
-.product-image, .review-photo, .advantage-image img {
-    aspect-ratio: attr(width) / attr(height);
-}
-
+/* 1. Стабилизация макета для CLS */
 img {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
-/* Улучшение производительности */
-.review-photos, .photo-previews {
-    will-change: contents;
+.product-image,
+.review-photo,
+.preview-item img,
+.production-image img,
+.advantage-image img,
+.footer-social-icon,
+.logo-icon,
+.full-width-img {
+    background-color: var(--bg-light);
 }
 
-/* Фикс для мобильных */
+/* 2. Задаём минимальные высоты для предотвращения скачков */
+.catalog-grid {
+    min-height: 460px;
+}
+
+.reviews-list {
+    min-height: 200px;
+}
+
+.advantages-content {
+    min-height: 400px;
+}
+
+/* 3. Оптимизация анимаций для GPU */
+.product-card:hover .product-image img,
+.review-photo:hover,
+.advantage-image:hover img {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* 4. Фикс для мобильных CLS */
 @media (max-width: 768px) {
-    .product-card, .review-card {
-        transform: translateZ(0);
-        backface-visibility: hidden;
+    .catalog-grid {
+        min-height: 280px;
+    }
+    
+    .product-card {
+        width: 140px;
+    }
+    
+    .product-image {
+        width: 140px;
+        height: 160px;
+    }
+    
+    .reviews-list {
+        min-height: 300px;
     }
 }
+
+/* 5. Ускорение рендеринга */
+.section-header,
+.navbar,
+.footer {
+    transform: translateZ(0);
+}
+
 }
