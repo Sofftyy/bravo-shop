@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО (РАБОТАЕТ НА ТЕЛЕФОНЕ) =====
+    // ===== ЗАГРУЗКА ФОТО (ПРОСТАЯ И НАДЁЖНАЯ) =====
     const photoUpload = document.getElementById('photoUpload');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -75,39 +75,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
-    // Проверяем наличие элементов
-    console.log('🔍 Поиск элементов для фото:');
-    console.log('photoUpload:', photoUpload);
-    console.log('photoInput:', photoInput);
+    console.log('🔍 photoUpload:', photoUpload);
+    console.log('🔍 photoInput:', photoInput);
 
     if (photoUpload && photoInput) {
-        console.log('✅ Элементы найдены, добавляем обработчики');
+        console.log('✅ Элементы найдены');
         
-        // Убираем все существующие обработчики и добавляем новый
-        const newPhotoUpload = photoUpload.cloneNode(true);
-        photoUpload.parentNode.replaceChild(newPhotoUpload, photoUpload);
-        
-        const newPhotoInput = photoInput.cloneNode(true);
-        photoInput.parentNode.replaceChild(newPhotoInput, photoInput);
-        
-        // Получаем обновлённые ссылки
-        const finalPhotoUpload = document.getElementById('photoUpload');
-        const finalPhotoInput = document.getElementById('photoInput');
-        
-        // Обработчик клика на область загрузки
-        finalPhotoUpload.addEventListener('click', function(e) {
-            console.log('🖱️ Клик по photoUpload');
-            // Проверяем, не кликнули ли на кнопку удаления
-            if (!e.target.classList.contains('preview-remove')) {
+        // Простой обработчик клика
+        photoUpload.onclick = function(e) {
+            console.log('🖱️ Клик!');
+            // Если кликнули не на крестик удаления
+            if (!e.target.classList || !e.target.classList.contains('preview-remove')) {
                 e.preventDefault();
-                e.stopPropagation();
-                console.log('👉 Открываем диалог выбора файла');
-                finalPhotoInput.click();
+                photoInput.click();
             }
-        });
-
+        };
+        
         // Обработчик выбора файлов
-        finalPhotoInput.addEventListener('change', function(e) {
+        photoInput.onchange = function(e) {
             const files = Array.from(e.target.files);
             console.log('📁 Выбрано файлов:', files.length);
             
@@ -115,10 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
                 return;
             }
-
+            
             files.forEach(file => {
-                console.log('Файл:', file.name, 'размер:', (file.size / 1024).toFixed(2), 'KB');
-                
                 if (file.size > 5 * 1024 * 1024) {
                     alert(`Файл ${file.name} слишком большой (макс. 5MB)`);
                     return;
@@ -128,37 +111,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 selectedFiles.push(file);
-                displayPreview(file);
+                
+                // Превью
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'preview-item';
+                    previewDiv.innerHTML = `
+                        <img src="${ev.target.result}" alt="Preview">
+                        <span class="preview-remove" data-filename="${file.name}">×</span>
+                    `;
+                    previewDiv.querySelector('.preview-remove').onclick = function() {
+                        selectedFiles = selectedFiles.filter(f => f.name !== file.name);
+                        previewDiv.remove();
+                        updatePhotoCount();
+                    };
+                    if (photoPreviews) photoPreviews.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
             });
-
+            
             updatePhotoCount();
-            finalPhotoInput.value = '';
-        });
-        
-        function displayPreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewDiv = document.createElement('div');
-                previewDiv.className = 'preview-item';
-                previewDiv.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <span class="preview-remove" data-filename="${file.name}">×</span>
-                `;
-                
-                previewDiv.querySelector('.preview-remove').addEventListener('click', function() {
-                    const filename = this.dataset.filename;
-                    selectedFiles = selectedFiles.filter(f => f.name !== filename);
-                    this.closest('.preview-item').remove();
-                    updatePhotoCount();
-                    console.log('🗑️ Удалено фото:', filename);
-                });
-                
-                if (photoPreviews) {
-                    photoPreviews.appendChild(previewDiv);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+            photoInput.value = '';
+        };
         
         function updatePhotoCount() {
             if (photoCount) {
@@ -166,9 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     } else {
-        console.error('❌ Элементы для загрузки фото НЕ найдены!');
-        console.error('photoUpload:', photoUpload);
-        console.error('photoInput:', photoInput);
+        console.error('❌ Элементы для фото не найдены!');
     }
 
     // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
