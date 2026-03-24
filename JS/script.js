@@ -1,9 +1,19 @@
+// Конфигурация Supabase - ЗАМЕНИ НА СВОИ ДАННЫЕ!
+const SUPABASE_URL = 'https://твой-проект.supabase.co';
+const SUPABASE_ANON_KEY = 'твой-anon-key';
+
+// Инициализация Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Переменная для хранения выбранных фото
+let selectedPhotos = [];
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Сайт загружен, инициализация...');
     
     initBurgerMenu();
     initProductSlider();
-    loadReviewsFromStorage();
+    loadReviewsFromSupabase(); // Загружаем из БД
     initRatingStars();
     initReviewForm();
     initSmoothScroll();
@@ -11,9 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Все компоненты инициализированы');
 });
-
-// Переменная для хранения выбранных фото
-let selectedPhotos = [];
 
 function initBurgerMenu() {
     const burgerMenu = document.getElementById('burgerMenu');
@@ -71,11 +78,98 @@ function initRatingStars() {
     });
 }
 
+// Загрузка отзывов из Supabase
+async function loadReviewsFromSupabase() {
+    const reviewsList = document.getElementById('reviewsList');
+    if (!reviewsList) return;
+    
+    reviewsList.innerHTML = '<div style="text-align: center; padding: 20px;">Загрузка отзывов...</div>';
+    
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .select(`
+                id,
+                user_name,
+                rating,
+                review_text,
+                review_date,
+                created_at
+            `)
+            .order('created_at', { ascending: false })
+            .limit(20);
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            reviewsList.innerHTML = '<div style="text-align: center; padding: 20px;">Пока нет отзывов. Будьте первым!</div>';
+            return;
+        }
+        
+        reviewsList.innerHTML = '';
+        
+        data.forEach(review => {
+            const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+            
+            // Форматируем дату
+            let date = review.review_date || review.created_at;
+            if (date) {
+                const d = new Date(date);
+                date = `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
+            } else {
+                date = 'Дата неизвестна';
+            }
+            
+            const reviewCard = document.createElement('div');
+            reviewCard.className = 'review-card';
+            reviewCard.innerHTML = `
+                <div class="review-header">
+                    <span class="review-author">${escapeHtml(review.user_name)}</span>
+                    <span class="review-date">${date}</span>
+                </div>
+                <div class="review-rating">
+                    ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
+                </div>
+                <p class="review-text">${escapeHtml(review.review_text)}</p>
+            `;
+            reviewsList.appendChild(reviewCard);
+        });
+        
+    } catch (error) {
+        console.error('Ошибка загрузки отзывов:', error);
+        reviewsList.innerHTML = '<div style="text-align: center; padding: 20px;">Ошибка загрузки отзывов</div>';
+    }
+}
+
+// Добавление отзыва в Supabase
+async function addReviewToSupabase(name, rating, text) {
+    try {
+        const { data, error } = await supabase
+            .from('reviews')
+            .insert([
+                {
+                    user_name: name,
+                    rating: rating,
+                    review_text: text,
+                    product_id: 1
+                }
+            ])
+            .select();
+        
+        if (error) throw error;
+        
+        return { success: true, data: data[0] };
+    } catch (error) {
+        console.error('Ошибка добавления отзыва:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 function initReviewForm() {
     const form = document.querySelector('.review-form');
     if(!form) return;
     
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const name = document.getElementById('reviewName')?.value.trim();
@@ -98,86 +192,30 @@ function initReviewForm() {
             return;
         }
         
-        saveReviewToStorage(name, activeStars, text);
-        addReviewToPage(name, activeStars, text);
+        const submitBtn = form.querySelector('.btn-submit');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
         
-        document.getElementById('reviewName').value = '';
-        document.getElementById('reviewText').value = '';
-        agreement.checked = false;
-        document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
-        selectedPhotos = [];
-        updatePhotoUploadDisplay();
+        const result = await addReviewToSupabase(name, activeStars, text);
         
-        alert('Спасибо за ваш отзыв!');
+        if (result.success) {
+            await loadReviewsFromSupabase();
+            
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewText').value = '';
+            agreement.checked = false;
+            document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
+            selectedPhotos = [];
+            updatePhotoUploadDisplay();
+            
+            alert('Спасибо за ваш отзыв!');
+        } else {
+            alert('Ошибка при сохранении: ' + result.error);
+        }
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Отправить';
     });
-}
-
-function loadReviewsFromStorage() {
-    const reviewsList = document.getElementById('reviewsList');
-    if (!reviewsList) return;
-    
-    let reviews = JSON.parse(localStorage.getItem('bravo_reviews')) || [];
-    
-    if (reviews.length === 0) {
-        reviews = [
-            { name: 'Алексей', rating: 5, text: 'Уют и атмосфера в магазине на уровне! Одежда по качеству очень хороша.', date: '05.12.2025' },
-            { name: 'Мария', rating: 4, text: 'Хорошая куртка, но немного великовата', date: '10.12.2025' },
-            { name: 'Елена', rating: 5, text: 'Платье просто супер! Все подруги спрашивают где купила', date: '15.12.2025' }
-        ];
-        localStorage.setItem('bravo_reviews', JSON.stringify(reviews));
-    }
-    
-    reviewsList.innerHTML = '';
-    
-    reviews.forEach(review => {
-        const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-        const reviewCard = document.createElement('div');
-        reviewCard.className = 'review-card';
-        reviewCard.innerHTML = `
-            <div class="review-header">
-                <span class="review-author">${escapeHtml(review.name)}</span>
-                <span class="review-date">${escapeHtml(review.date)}</span>
-            </div>
-            <div class="review-rating">
-                ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
-            </div>
-            <p class="review-text">${escapeHtml(review.text)}</p>
-        `;
-        reviewsList.appendChild(reviewCard);
-    });
-}
-
-function saveReviewToStorage(name, rating, text) {
-    let reviews = JSON.parse(localStorage.getItem('bravo_reviews')) || [];
-    const today = new Date();
-    const date = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
-    
-    reviews.unshift({ name: escapeHtml(name), rating, text: escapeHtml(text), date });
-    
-    if (reviews.length > 50) reviews = reviews.slice(0, 50);
-    
-    localStorage.setItem('bravo_reviews', JSON.stringify(reviews));
-}
-
-function addReviewToPage(name, rating, text) {
-    const today = new Date();
-    const date = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
-    const starsHtml = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-    
-    const reviewsList = document.getElementById('reviewsList');
-    const newReview = document.createElement('div');
-    newReview.className = 'review-card';
-    newReview.innerHTML = `
-        <div class="review-header">
-            <span class="review-author">${escapeHtml(name)}</span>
-            <span class="review-date">${date}</span>
-        </div>
-        <div class="review-rating">
-            ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
-        </div>
-        <p class="review-text">${escapeHtml(text)}</p>
-    `;
-    reviewsList.prepend(newReview);
 }
 
 function initSmoothScroll() {
