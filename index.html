@@ -8,30 +8,54 @@
     <meta name="author" content="Шиленков Данила Владимирович">
     <title>Bravo - магазин винтажной одежды</title>
     
-    <!-- Preconnect для улучшения загрузки шрифтов -->
+    <!-- Оптимизированная загрузка шрифтов - не блокирует отрисовку -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
     
-    <!-- Оптимизированный CSS -->
-    <link rel="stylesheet" href="CSS/style.css">
+    <!-- Критический CSS встраиваем для быстрой отрисовки -->
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
+        body{font-family:'Inter',sans-serif;color:var(--black);background-color:var(--bg-light);line-height:1.5}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        .navbar{background-color:var(--dark-blue);padding:15px 0;position:sticky;top:0;z-index:1000}
+        .navbar .container{display:flex;justify-content:space-between;align-items:center}
+        .logo{display:flex;align-items:center;gap:32px;font-size:32px;font-weight:700;color:var(--white);text-decoration:none}
+        .logo-icon{width:35px;height:35px;object-fit:contain}
+        .full-width-image{width:100%;overflow:hidden}
+        .full-width-img{width:100%;height:auto;display:block}
+        .section-header{background-color:var(--dark-blue);width:100%;padding:25px 0;margin-bottom:40px}
+        .section-title{font-size:36px;font-weight:600;color:var(--dark-blue);margin-bottom:30px}
+        .white-title{color:var(--white)}
+        .section-header .section-title{margin-bottom:0}
+        @media (max-width:768px){
+            .section-title{font-size:16px;text-align:center}
+            .logo{gap:16px;font-size:24px}
+            .logo-icon{width:30px;height:30px}
+        }
+    </style>
+    <link rel="stylesheet" href="CSS/style.css" media="print" onload="this.media='all'">
 </head>
 <body>
     <!-- ШАПКА САЙТА -->
-    <nav class="navbar" aria-label="Главная навигация">
+    <nav class="navbar">
         <div class="container">
-            <a href="#" class="logo" aria-label="Bravo - главная">
-                <img src="images/bravo-icon.webp" alt="Логотип Bravo" class="logo-icon" width="35" height="35" loading="eager">
+            <a href="#" class="logo">
+                <img src="images/bravo-icon.webp" alt="Bravo" class="logo-icon" width="35" height="35">
                 Bravo
             </a>
             
-            <button class="burger-menu" id="burgerMenu" aria-label="Меню" aria-expanded="false">
+            <button class="burger-menu" id="burgerMenu" aria-label="Меню">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
             
-            <ul class="nav-menu" id="navMenu" role="navigation">
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="#about">О компании</a></li>
                 <li><a href="#production">Наше производство</a></li>
                 <li><a href="#catalog">Каталог</a></li>
@@ -43,7 +67,7 @@
     </nav>
 
     <main>
-        <!-- ФОТО ПОД ШАПКОЙ с оптимизацией -->
+        <!-- ФОТО ПОД ШАПКОЙ -->
         <div class="full-width-image">
             <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" loading="eager">
         </div>
@@ -191,7 +215,7 @@
             </div>
             <div class="container">
                 <div class="reviews-list" id="reviewsList">
-                    <!-- Отзывы загружаются из Supabase -->
+                    <!-- Отзывы будут загружаться из Supabase -->
                 </div>
                 
                 <div class="review-form-container">
@@ -202,11 +226,11 @@
                         <textarea class="form-textarea" id="reviewText" placeholder="Введите текст..." required></textarea>
                         
                         <div class="rating-input" id="ratingInput" aria-label="Оценка товара">
-                            <span class="star" data-rating="1" aria-label="1 звезда">★</span>
-                            <span class="star" data-rating="2" aria-label="2 звезды">★</span>
-                            <span class="star" data-rating="3" aria-label="3 звезды">★</span>
-                            <span class="star" data-rating="4" aria-label="4 звезды">★</span>
-                            <span class="star" data-rating="5" aria-label="5 звезд">★</span>
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
                         </div>
                         
                         <div class="photo-upload" id="photoUpload">

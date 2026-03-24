@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ===== МЕНЮ =====
+    // ===== МЕНЮ (БУРГЕР) =====
     const burgerMenu = document.getElementById('burgerMenu');
     const navMenu = document.getElementById('navMenu');
     
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ ТОВАРОВ (для трёх товаров) =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ТОВАРОВ =====
     const catalogGrid = document.getElementById('catalogGrid');
     const prevArrow = document.querySelector('.prev-arrow');
     const nextArrow = document.querySelector('.next-arrow');
@@ -29,12 +29,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalProducts = products.length;
         
         function showProducts(index) {
-            // Скрываем все товары
             products.forEach(product => {
                 product.style.display = 'none';
             });
             
-            // Показываем два товара начиная с index
             for (let i = 0; i < 2; i++) {
                 const productIndex = (index + i) % totalProducts;
                 products[productIndex].style.display = 'flex';
@@ -51,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showProducts(currentIndex);
         });
         
-        // Показываем первые два товара
         showProducts(0);
     }
 
@@ -81,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (photoUpload && photoInput) {
         photoUpload.addEventListener('click', function(e) {
             if (!e.target.classList.contains('preview-remove')) {
+                e.preventDefault();
                 photoInput.click();
             }
         });
@@ -181,9 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (error) throw error;
 
-            console.log('📥 Загруженные отзывы:', reviews);
-
             const reviewsList = document.querySelector('.reviews-list');
+            if (!reviewsList) return;
             reviewsList.innerHTML = '';
             
             if (reviews && reviews.length > 0) {
@@ -199,26 +196,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     let cardHtml = `
                         <div class="review-header">
-                            <span class="review-author">${review.user_name}</span>
+                            <span class="review-author">${escapeHtml(review.user_name)}</span>
                             <span class="review-date">${reviewDate}</span>
                         </div>
                         <div class="review-rating">
                             ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
                         </div>
-                        <p class="review-text">${review.review_text}</p>
-                        <div class="review-product">Товар: ${review.product_name}</div>
+                        <p class="review-text">${escapeHtml(review.review_text)}</p>
+                        <div class="review-product">Товар: ${escapeHtml(review.product_name)}</div>
                     `;
                     
-                    // Добавляем фото, если они есть
                     if (review.photos && review.photos.length > 0) {
-                        console.log('✅ Есть фото в отзыве:', review.photos);
                         cardHtml += '<div class="review-photos">';
-                        review.photos.forEach((photoUrl, index) => {
-                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo">`;
+                        review.photos.forEach((photoUrl) => {
+                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" loading="lazy">`;
                         });
                         cardHtml += '</div>';
-                    } else {
-                        console.log('❌ Нет фото в отзыве');
                     }
                     
                     reviewCard.innerHTML = cardHtml;
@@ -230,6 +223,13 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Ошибка при загрузке отзывов:', error);
         }
+    }
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     // ===== ФОРМА ОТЗЫВА =====
@@ -255,10 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                console.log('📝 Отправка отзыва...');
-                console.log('Файлов для загрузки:', selectedFiles.length);
-
-                // 1. Сначала создаём отзыв без фото
                 const { data: reviewId, error: reviewError } = await supabase
                     .rpc('add_review', {
                         p_product_id: 1,
@@ -269,39 +265,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                 if (reviewError) throw reviewError;
-                console.log('✅ Отзыв создан, ID:', reviewId);
 
-                // 2. Если есть фото, загружаем их
                 if (selectedFiles.length > 0) {
-                    console.log('📤 Загружаем фото...');
                     const photoUrls = await uploadPhotos(selectedFiles, reviewId);
-                    console.log('✅ Фото загружены:', photoUrls);
                     
-                    // 3. Обновляем отзыв с фото
-                    const { error: updateError } = await supabase
+                    await supabase
                         .from('reviews')
                         .update({ photos: photoUrls })
                         .eq('id', reviewId);
-
-                    if (updateError) throw updateError;
-                    console.log('✅ Отзыв обновлён с фото');
                 }
 
-                // Очищаем форму
                 document.querySelector('.form-input').value = '';
                 document.querySelector('.form-textarea').value = '';
                 agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
                 
-                // Очищаем фото
                 selectedFiles = [];
                 if (photoPreviews) photoPreviews.innerHTML = '';
                 updatePhotoCount();
 
                 alert('✅ Отзыв успешно добавлен!');
-                
-                // Перезагружаем отзывы
-                await loadReviews();
+                loadReviews();
 
             } catch (error) {
                 console.error('❌ Ошибка:', error);
@@ -310,79 +294,67 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== КНОПКИ "ПОДРОБНЕЕ" С ДЕТАЛЬНОЙ ИНФОРМАЦИЕЙ =====
+    // ===== КНОПКИ "ПОДРОБНЕЕ" =====
     document.querySelectorAll('.product-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.dataset.product;
             const productCard = this.closest('.product-card');
-            const productName = productCard.querySelector('img').alt;
             
-            // Информация о товарах
             const productInfo = {
                 '1': {
                     title: 'Винтажный жакет',
-                    description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы. Идеально подойдет для создания романтичного образа или делового стиля с историей.',
+                    description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.',
                     details: [
-                        '📍 Материал: 100% хлопок высокого качества',
-                        '📍 Размер: M (подойдет на 44-46)',
-                        '📍 Цвет: нежный бежевый',
-                        '📍 Особенности: винтажные пуговицы с перламутром, шелковая подкладка',
-                        '📍 Состояние: отличное, без дефектов'
+                        '📍 Материал: 100% хлопок',
+                        '📍 Размер: M (44-46)',
+                        '📍 Цвет: бежевый',
+                        '📍 Состояние: отличное'
                     ],
                     price: '2 990 ₽'
                 },
                 '2': {
                     title: 'Винтажный пиджак',
-                    description: 'Классический пиджак в стиле oversize 90-х годов. Отличный вариант для создания стильного образа в стиле кэжуал или делового лука с винтажным акцентом.',
+                    description: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.',
                     details: [
-                        '📍 Материал: смесовая ткань (шерсть 70% / полиэстер 30%)',
-                        '📍 Размер: L (подойдет на 48-50)',
-                        '📍 Цвет: глубокий темно-синий',
-                        '📍 Особенности: нагрудный карман, шлица сзади, металлические пуговицы',
-                        '📍 Состояние: хорошее, небольшая потертость на рукаве (винтажный шарм)'
+                        '📍 Материал: шерсть 70% / полиэстер 30%',
+                        '📍 Размер: L (48-50)',
+                        '📍 Цвет: темно-синий',
+                        '📍 Состояние: хорошее'
                     ],
                     price: '1 990 ₽'
                 },
                 '3': {
                     title: 'Винтажные джинсы',
-                    description: 'Аутентичные джинсы прямого кроя 90-х годов. Настоящий винтажный деним с историей. Высокое качество и неповторимый стиль.',
+                    description: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.',
                     details: [
-                        '📍 Материал: 100% хлопок (плотный деним 14 унций)',
-                        '📍 Размер: 32/34 (подойдет на 48-50, рост 170-180)',
-                        '📍 Цвет: выбеленный светло-синий с эффектом потертости',
-                        '📍 Особенности: винтажные пуговицы, кожаный патч сзади, потертости',
-                        '📍 Состояние: хорошее, есть естественные потертости (винтаж)'
+                        '📍 Материал: 100% хлопок',
+                        '📍 Размер: 32/34 (48-50)',
+                        '📍 Цвет: светло-синий',
+                        '📍 Состояние: хорошее'
                     ],
                     price: '2 490 ₽'
                 }
             };
             
             const info = productInfo[productId];
+            if (!info) return;
             
-            // Проверяем, есть ли уже информация
             const existingInfo = productCard.querySelector('.product-info');
             if (existingInfo) {
                 existingInfo.remove();
             } else {
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'product-info';
-                
-                // Создаём HTML с деталями
-                const detailsHtml = info.details.map(detail => `<li style="margin-bottom: 8px;">${detail}</li>`).join('');
+                const detailsHtml = info.details.map(detail => `<li>${detail}</li>`).join('');
                 
                 infoDiv.innerHTML = `
-                    <div style="margin-top: 15px; padding: 20px; background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%); border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
-                        <h4 style="color: var(--dark-blue); margin-bottom: 15px; font-size: 22px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; font-weight: 600;">${info.title}</h4>
-                        <p style="margin-bottom: 15px; font-size: 16px; line-height: 1.6; color: #444;">${info.description}</p>
-                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            <h5 style="color: var(--dark-blue); margin-bottom: 10px; font-size: 16px;">Характеристики:</h5>
-                            <ul style="padding-left: 20px; color: #555; list-style-type: none;">
-                                ${detailsHtml}
-                            </ul>
-                        </div>
-                        <p style="font-size: 22px; font-weight: bold; color: var(--accent); margin-bottom: 15px; text-align: right;">${info.price}</p>
-                        <button class="close-info" style="padding: 12px 25px; background: var(--accent); color: white; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s; display: block; margin: 0 auto;">Закрыть</button>
+                    <div>
+                        <h4>${info.title}</h4>
+                        <p>${info.description}</p>
+                        <ul>${detailsHtml}</ul>
+                        <p class="price">${info.price}</p>
+                        <button class="close-info">Закрыть</button>
                     </div>
                 `;
                 productCard.appendChild(infoDiv);
@@ -408,6 +380,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== ЗАГРУЖАЕМ ОТЗЫВЫ =====
     loadReviews();
 });
