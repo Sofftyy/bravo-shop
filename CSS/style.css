@@ -246,8 +246,6 @@ body {
     align-items: center;
     gap: 20px;
     flex-shrink: 0;
-    will-change: transform;
-    transform: translateZ(0);
 }
 
 .product-image {
@@ -325,8 +323,6 @@ body {
     align-items: center;
     gap: 24px;
     margin-bottom: 60px;
-    will-change: transform;
-    transform: translateZ(0);
 }
 
 .advantage-block:last-child {
@@ -334,9 +330,9 @@ body {
 }
 
 .advantage-image {
-    flex-shrink: 0;
     width: 100px;
     height: 100px;
+    flex-shrink: 0;
 }
 
 .advantage-image img {
@@ -377,8 +373,6 @@ body {
     border-radius: 10px;
     margin-bottom: 20px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-    will-change: transform;
-    transform: translateZ(0);
 }
 
 .review-header {
@@ -913,17 +907,4 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
-}
-
-/* Фото загрузка */
-#photoUploadBtn {
-    cursor: pointer;
-}
-
-.photo-upload {
-    cursor: pointer;
-}
-
-.photo-upload:hover {
-    background-color: var(--light-gray);
 }
