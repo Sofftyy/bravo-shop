@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             products.forEach(product => {
                 product.style.display = 'none';
             });
-            
             for (let i = 0; i < 2; i++) {
                 const productIndex = (index + i) % totalProducts;
                 products[productIndex].style.display = 'flex';
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
-    // ===== ЗАГРУЗКА ФОТО (ПРОСТАЯ И РАБОЧАЯ) =====
+    // ===== ЗАГРУЗКА ФОТО =====
     const photoLabel = document.getElementById('photoLabel');
     const photoInput = document.getElementById('photoInput');
     const photoPreviews = document.getElementById('photoPreviews');
@@ -75,24 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFiles = [];
     const MAX_PHOTOS = 3;
 
-    console.log('🔍 photoLabel:', photoLabel);
-    console.log('🔍 photoInput:', photoInput);
-
     if (photoLabel && photoInput) {
-        console.log('✅ Элементы найдены');
-        
-        // Клик по тексту "Добавить фото" открывает диалог
         photoLabel.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('🖱️ Клик по Добавить фото');
             photoInput.click();
         });
         
-        // Обработчик выбора файлов
         photoInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
-            console.log('📁 Выбрано файлов:', files.length);
-            
             if (selectedFiles.length + files.length > MAX_PHOTOS) {
                 alert(`Можно загрузить не более ${MAX_PHOTOS} фото`);
                 photoInput.value = '';
@@ -110,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 selectedFiles.push(file);
                 
-                // Превью
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     const previewDiv = document.createElement('div');
@@ -138,34 +126,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 photoCount.textContent = `${selectedFiles.length}/${MAX_PHOTOS} изображений`;
             }
         }
-    } else {
-        console.error('❌ Элементы для фото не найдены!');
     }
 
     // ===== ЗАГРУЗКА ФОТО В SUPABASE =====
     async function uploadPhotos(files, reviewId) {
         const uploadedUrls = [];
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const fileExt = file.name.split('.').pop();
             const fileName = `review-${reviewId}-${Date.now()}-${i}.${fileExt}`;
             const filePath = `reviews/${fileName}`;
-
             try {
-                const { error } = await supabase.storage
-                    .from('review-photos')
-                    .upload(filePath, file);
-
+                const { error } = await supabase.storage.from('review-photos').upload(filePath, file);
                 if (error) throw error;
-
-                const { data: { publicUrl } } = supabase.storage
-                    .from('review-photos')
-                    .getPublicUrl(filePath);
-
+                const { data: { publicUrl } } = supabase.storage.from('review-photos').getPublicUrl(filePath);
                 uploadedUrls.push(publicUrl);
-                console.log('✅ Фото загружено:', publicUrl);
             } catch (error) {
                 console.error('Ошибка загрузки фото:', error);
             }
@@ -177,48 +153,30 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadReviews() {
         try {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
-            const { data: reviews, error } = await supabase
-                .from('v_recent_reviews')
-                .select('*');
-
+            const { data: reviews, error } = await supabase.from('v_recent_reviews').select('*');
             if (error) throw error;
-
             const reviewsList = document.querySelector('.reviews-list');
             if (!reviewsList) return;
             reviewsList.innerHTML = '';
-            
             if (reviews && reviews.length > 0) {
                 reviews.forEach(review => {
                     const reviewCard = document.createElement('div');
                     reviewCard.className = 'review-card';
-                    
-                    const reviewDate = review.review_date 
-                        ? new Date(review.review_date).toLocaleDateString('ru-RU')
-                        : 'Дата не указана';
-                    
+                    const reviewDate = review.review_date ? new Date(review.review_date).toLocaleDateString('ru-RU') : 'Дата не указана';
                     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-                    
                     let cardHtml = `
                         <div class="review-header">
                             <span class="review-author">${escapeHtml(review.user_name)}</span>
                             <span class="review-date">${reviewDate}</span>
                         </div>
-                        <div class="review-rating">
-                            ${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}
-                        </div>
+                        <div class="review-rating">${starsHtml.split('').map(s => `<span class="star">${s}</span>`).join('')}</div>
                         <p class="review-text">${escapeHtml(review.review_text)}</p>
-                        <div class="review-product">Товар: ${escapeHtml(review.product_name)}</div>
-                    `;
-                    
+                        <div class="review-product">Товар: ${escapeHtml(review.product_name)}</div>`;
                     if (review.photos && review.photos.length > 0) {
                         cardHtml += '<div class="review-photos">';
-                        review.photos.forEach((photoUrl) => {
-                            cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" loading="lazy">`;
-                        });
+                        review.photos.forEach(photoUrl => { cardHtml += `<img src="${photoUrl}" alt="Фото отзыва" class="review-photo" loading="lazy">`; });
                         cardHtml += '</div>';
                     }
-                    
                     reviewCard.innerHTML = cardHtml;
                     reviewsList.appendChild(reviewCard);
                 });
@@ -242,56 +200,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if(form) {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
             const name = document.querySelector('.form-input').value.trim();
             const text = document.querySelector('.form-textarea').value.trim();
             const agreement = document.getElementById('agreement');
             const activeStars = document.querySelectorAll('.rating-input .star.active').length;
-
-            if(!name || !text) {
-                alert('Пожалуйста, заполните все поля!');
-                return;
-            }
-            if(!agreement.checked) {
-                alert('Необходимо согласие на обработку персональных данных');
-                return;
-            }
-
+            if(!name || !text) { alert('Пожалуйста, заполните все поля!'); return; }
+            if(!agreement.checked) { alert('Необходимо согласие на обработку персональных данных'); return; }
             try {
-                const { data: reviewId, error: reviewError } = await supabase
-                    .rpc('add_review', {
-                        p_product_id: 1,
-                        p_user_name: name,
-                        p_rating: activeStars,
-                        p_review_text: text,
-                        p_photos: []
-                    });
-
+                const { data: reviewId, error: reviewError } = await supabase.rpc('add_review', { p_product_id: 1, p_user_name: name, p_rating: activeStars, p_review_text: text, p_photos: [] });
                 if (reviewError) throw reviewError;
-
                 if (selectedFiles.length > 0) {
                     const photoUrls = await uploadPhotos(selectedFiles, reviewId);
-                    
-                    await supabase
-                        .from('reviews')
-                        .update({ photos: photoUrls })
-                        .eq('id', reviewId);
+                    await supabase.from('reviews').update({ photos: photoUrls }).eq('id', reviewId);
                 }
-
                 document.querySelector('.form-input').value = '';
                 document.querySelector('.form-textarea').value = '';
                 agreement.checked = false;
                 document.querySelectorAll('.rating-input .star').forEach(s => s.classList.remove('active'));
-                
                 selectedFiles = [];
                 if (photoPreviews) photoPreviews.innerHTML = '';
                 updatePhotoCount();
-
                 alert('✅ Отзыв успешно добавлен!');
                 loadReviews();
-
             } catch (error) {
                 console.error('❌ Ошибка:', error);
                 alert('❌ Ошибка: ' + error.message);
@@ -305,68 +236,21 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const productId = this.dataset.product;
             const productCard = this.closest('.product-card');
-            
             const productInfo = {
-                '1': {
-                    title: 'Винтажный жакет',
-                    description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.',
-                    details: [
-                        '📍 Материал: 100% хлопок',
-                        '📍 Размер: M (44-46)',
-                        '📍 Цвет: бежевый',
-                        '📍 Состояние: отличное'
-                    ],
-                    price: '2 990 ₽'
-                },
-                '2': {
-                    title: 'Винтажный пиджак',
-                    description: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.',
-                    details: [
-                        '📍 Материал: шерсть 70% / полиэстер 30%',
-                        '📍 Размер: L (48-50)',
-                        '📍 Цвет: темно-синий',
-                        '📍 Состояние: хорошее'
-                    ],
-                    price: '1 990 ₽'
-                },
-                '3': {
-                    title: 'Винтажные джинсы',
-                    description: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.',
-                    details: [
-                        '📍 Материал: 100% хлопок',
-                        '📍 Размер: 32/34 (48-50)',
-                        '📍 Цвет: светло-синий',
-                        '📍 Состояние: хорошее'
-                    ],
-                    price: '2 490 ₽'
-                }
+                '1': { title: 'Винтажный жакет', description: 'Элегантный винтажный жакет 80-х годов. Прекрасное состояние, натуральные материалы.', details: ['📍 Материал: 100% хлопок', '📍 Размер: M (44-46)', '📍 Цвет: бежевый', '📍 Состояние: отличное'], price: '2 990 ₽' },
+                '2': { title: 'Винтажный пиджак', description: 'Классический пиджак в стиле oversize. Отличный вариант для создания стильного образа.', details: ['📍 Материал: шерсть 70% / полиэстер 30%', '📍 Размер: L (48-50)', '📍 Цвет: темно-синий', '📍 Состояние: хорошее'], price: '1 990 ₽' },
+                '3': { title: 'Винтажные джинсы', description: 'Аутентичные джинсы прямого кроя 90-х годов. Высокое качество и неповторимый стиль.', details: ['📍 Материал: 100% хлопок', '📍 Размер: 32/34 (48-50)', '📍 Цвет: светло-синий', '📍 Состояние: хорошее'], price: '2 490 ₽' }
             };
-            
             const info = productInfo[productId];
             if (!info) return;
-            
             const existingInfo = productCard.querySelector('.product-info');
-            if (existingInfo) {
-                existingInfo.remove();
-            } else {
+            if (existingInfo) { existingInfo.remove(); } else {
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'product-info';
                 const detailsHtml = info.details.map(detail => `<li>${detail}</li>`).join('');
-                
-                infoDiv.innerHTML = `
-                    <div>
-                        <h4>${info.title}</h4>
-                        <p>${info.description}</p>
-                        <ul>${detailsHtml}</ul>
-                        <p class="price">${info.price}</p>
-                        <button class="close-info">Закрыть</button>
-                    </div>
-                `;
+                infoDiv.innerHTML = `<div><h4>${info.title}</h4><p>${info.description}</p><ul>${detailsHtml}</ul><p class="price">${info.price}</p><button class="close-info">Закрыть</button></div>`;
                 productCard.appendChild(infoDiv);
-                
-                infoDiv.querySelector('.close-info').addEventListener('click', function() {
-                    infoDiv.remove();
-                });
+                infoDiv.querySelector('.close-info').addEventListener('click', function() { infoDiv.remove(); });
             }
         });
     });
@@ -376,12 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
-            if(target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+            if(target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         });
     });
 

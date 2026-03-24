@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bravo - магазин винтажной одежды. Качественный винтаж по доступным ценам. Жакеты, пиджаки, джинсы с историей.">
+    <meta name="description" content="Bravo - магазин винтажной одежды. Качественный винтаж по доступным ценам.">
     <meta name="keywords" content="винтаж, одежда, магазин, винтажный жакет, винтажный пиджак, винтажные джинсы">
     <meta name="author" content="Шиленков Данила Владимирович">
     <title>Bravo - магазин винтажной одежды</title>
@@ -16,7 +16,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     </noscript>
     
-    <!-- Критический CSS -->
+    <!-- Критический CSS для быстрой отрисовки -->
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--dark-blue:#1E2A47;--accent:#B35437;--bg-light:#F5F1EC;--white:#FFFFFF;--black:#000000;--gray:#666;--light-gray:#E5E5E5}
@@ -68,7 +68,7 @@
 
     <main>
         <div class="full-width-image">
-            <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" loading="eager">
+            <img src="images/shop-photo.webp" alt="Магазин Bravo" class="full-width-img" width="1200" height="400" loading="eager" fetchpriority="high">
         </div>
 
         <section id="about" class="section-with-header">
@@ -217,7 +217,7 @@
                         <input type="text" class="form-input" id="reviewName" placeholder="Ваше имя..." required>
                         <textarea class="form-textarea" id="reviewText" placeholder="Введите текст..." required></textarea>
                         
-                        <div class="rating-input" id="ratingInput" aria-label="Оценка товара">
+                        <div class="rating-input" id="ratingInput">
                             <span class="star" data-rating="1">★</span>
                             <span class="star" data-rating="2">★</span>
                             <span class="star" data-rating="3">★</span>
@@ -225,13 +225,12 @@
                             <span class="star" data-rating="5">★</span>
                         </div>
                         
-                        <!-- БЛОК ЗАГРУЗКИ ФОТО (ИСПРАВЛЕН) -->
                         <div class="photo-upload" id="photoUpload">
-    <span class="photo-label" id="photoLabel">Добавить фото</span>
-    <span class="photo-note" id="photoCount">0/3 изображений</span>
-    <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
-    <div class="photo-previews" id="photoPreviews"></div>
-</div>
+                            <span class="photo-label" id="photoLabel">Добавить фото</span>
+                            <span class="photo-note" id="photoCount">0/3 изображений</span>
+                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple style="display: none;">
+                            <div class="photo-previews" id="photoPreviews"></div>
+                        </div>
                         
                         <div class="checkbox-wrapper">
                             <input type="checkbox" id="agreement" required>
@@ -306,7 +305,7 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="JS/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="JS/script.js" defer></script>
 </body>
 </html>

@@ -1145,4 +1145,31 @@ body {
     .footer-copyright {
         font-size: 10px;
     }
+
+/* Стабилизация макета для улучшения CLS */
+.product-card, .review-card, .advantage-block {
+    contain: layout style paint;
+}
+
+.product-image, .review-photo, .advantage-image img {
+    aspect-ratio: attr(width) / attr(height);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Улучшение производительности */
+.review-photos, .photo-previews {
+    will-change: contents;
+}
+
+/* Фикс для мобильных */
+@media (max-width: 768px) {
+    .product-card, .review-card {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+}
 }
