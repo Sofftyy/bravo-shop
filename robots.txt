@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /JS/
+Disallow: /CSS/
+
+Sitemap: https://bravo-shop.pages.dev/sitemap.xml
