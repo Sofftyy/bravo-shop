@@ -1141,4 +1141,39 @@ body {
     .catalog-slider {
         min-height: 280px;
     }
+
+    /* Резервируем высоту для текстовых блоков */
+.about-content,
+.production-content {
+    contain: layout;
+}
+
+.about-text,
+.production-text {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+/* Стабилизация текста на мобильных */
+@media (max-width: 768px) {
+    .about-text,
+    .production-text {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+    
+    .about-content,
+    .production-content {
+        min-height: 80px;
+    }
+}
+
+/* Убираем возможные скачки от переноса слов */
+.about-text br,
+.production-text br {
+    display: block;
+    content: "";
+    margin: 0;
+}
+
 }
