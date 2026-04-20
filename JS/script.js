@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const SUPABASE_URL = 'https://wrvovgkrrguvcvzeoyne.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_oq84G50obqgmOAj60kUPmw_YPrq-DpT';
 
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     // ===== ФОТО =====
     const photoLabel = document.getElementById('photoLabel');
     const photoInput = document.getElementById('photoInput');
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ===== КНОПКИ "ПОДРОБНЕЕ" (ИСПРАВЛЕНО) =====
+    // ===== КНОПКИ "ПОДРОБНЕЕ"=====
     const infoMap = {
         1: { 
             title: 'Винтажный жакет', 
@@ -248,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', clickHandler);
     });
 
-    // ===== ПЛАВНАЯ ПРОКРУТКА (ИСПРАВЛЕНО) =====
+    // ===== ПЛАВНАЯ ПРОКРУТКА =====
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.onclick = (e) => {
             e.preventDefault();
